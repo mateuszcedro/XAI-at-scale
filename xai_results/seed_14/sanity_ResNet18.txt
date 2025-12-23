@@ -1,0 +1,55 @@
+================================================================================
+SANITY CHECK RESULTS FOR ResNet18
+================================================================================
+
+LAYER-WISE RELEVANCE RANDOMIZATION:
+----------------------------------------
+
+Saliency:
+  Mean degradation: 0.7193 ± 0.2532
+  η² (effect size): 1.0000
+
+IntegratedGradients:
+  Mean degradation: 0.6350 ± 0.2773
+  η² (effect size): 1.0000
+
+GradientShap:
+  Mean degradation: 0.6246 ± 0.1933
+  η² (effect size): 1.0000
+
+GradCAM:
+  Mean degradation: 0.6829 ± 0.2810
+  η² (effect size): 1.0000
+
+FeaturePermutation:
+  Mean degradation: 0.7949 ± 0.1636
+  η² (effect size): 1.0000
+
+================================================================================
+INPUT RANDOMIZATION TEST:
+----------------------------------------
+
+Saliency:
+  Mean sensitivity: 0.002537 ± 0.000027
+  η² (effect size): 1.0000
+  Cliff's delta: 0.3600
+
+IntegratedGradients:
+  Mean sensitivity: 0.002105 ± 0.000001
+  η² (effect size): 1.0000
+  Cliff's delta: -0.0400
+
+GradientShap:
+  Mean sensitivity: 0.002528 ± 0.000008
+  η² (effect size): 1.0000
+  Cliff's delta: -0.3600
+
+GradCAM:
+  Mean sensitivity: 0.041065 ± 0.000066
+  η² (effect size): 1.0000
+  Cliff's delta: -0.4400
+
+FeaturePermutation:
+  Mean sensitivity: 0.005275 ± 0.000019
+  η² (effect size): 1.0000
+  Cliff's delta: 0.8400

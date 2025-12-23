@@ -3,6 +3,7 @@ XAI RESULTS SUMMARY - ACROSS ALL SEEDS AND MODELS
 ========================================================================================================================
 
 Number of seeds: 3
+Seeds: 
 Number of models: 9
 
 ========================================================================================================================
@@ -23,7 +24,7 @@ RelevanceRankAccuracy: How well the XAI method ranks relevant features
   - Higher is better (range: 0-1)
   - Measures if important features get high attribution scores
 
-RelevanceMassAccuracy: How much attribution is concentrated on relevant features
+PositiveAttributionRatio: How much attribution is concentrated on relevant features
   - Higher is better (range: 0-1)
   - Measures if explanations focus on important regions
 
@@ -36,208 +37,298 @@ CheXpert:
 --------------------------------------------------------------------------------
 
   FeaturePermutation:
-    RelevanceRankAccuracy: 0.1842 ± 0.0025
-      Range: [0.1807, 0.1865]
+    RelevanceRankAccuracy: 0.3270 ± 0.0154
+      Range: [0.3054, 0.3404]
+    PositiveAttributionRatio: 0.3503 ± 0.0166
+      Range: [0.3268, 0.3624]
 
   GradCAM:
-    RelevanceRankAccuracy: 0.2159 ± 0.0070
-      Range: [0.2082, 0.2252]
+    RelevanceRankAccuracy: 0.3500 ± 0.0142
+      Range: [0.3365, 0.3696]
+    PositiveAttributionRatio: 0.3397 ± 0.0100
+      Range: [0.3267, 0.3510]
 
   GradientShap:
-    RelevanceRankAccuracy: 0.1663 ± 0.0038
-      Range: [0.1610, 0.1692]
+    RelevanceRankAccuracy: 0.3254 ± 0.0089
+      Range: [0.3129, 0.3320]
+    PositiveAttributionRatio: 0.3585 ± 0.0081
+      Range: [0.3473, 0.3664]
 
   IntegratedGradients:
-    RelevanceRankAccuracy: 0.1674 ± 0.0032
-      Range: [0.1630, 0.1706]
+    RelevanceRankAccuracy: 0.3251 ± 0.0097
+      Range: [0.3114, 0.3323]
+    PositiveAttributionRatio: 0.3555 ± 0.0087
+      Range: [0.3434, 0.3635]
 
   Saliency:
-    RelevanceRankAccuracy: 0.2073 ± 0.0034
-      Range: [0.2029, 0.2111]
+    RelevanceRankAccuracy: 0.3291 ± 0.0094
+      Range: [0.3161, 0.3380]
+    PositiveAttributionRatio: 0.3483 ± 0.0123
+      Range: [0.3308, 0.3578]
 
 DenseNet121:
 --------------------------------------------------------------------------------
 
   FeaturePermutation:
-    RelevanceRankAccuracy: 0.2704 ± 0.0389
-      Range: [0.2154, 0.2991]
+    RelevanceRankAccuracy: 0.3065 ± 0.0195
+      Range: [0.2792, 0.3235]
+    PositiveAttributionRatio: 0.3419 ± 0.0242
+      Range: [0.3232, 0.3760]
 
   GradCAM:
-    RelevanceRankAccuracy: 0.1607 ± 0.0777
-      Range: [0.0740, 0.2625]
+    RelevanceRankAccuracy: 0.3768 ± 0.0051
+      Range: [0.3732, 0.3839]
+    PositiveAttributionRatio: 0.3601 ± 0.0014
+      Range: [0.3589, 0.3620]
 
   GradientShap:
-    RelevanceRankAccuracy: 0.1178 ± 0.0085
-      Range: [0.1063, 0.1268]
+    RelevanceRankAccuracy: 0.3398 ± 0.0064
+      Range: [0.3326, 0.3481]
+    PositiveAttributionRatio: 0.4180 ± 0.0231
+      Range: [0.3938, 0.4491]
 
   IntegratedGradients:
-    RelevanceRankAccuracy: 0.1180 ± 0.0091
-      Range: [0.1055, 0.1271]
+    RelevanceRankAccuracy: 0.3423 ± 0.0062
+      Range: [0.3344, 0.3496]
+    PositiveAttributionRatio: 0.4205 ± 0.0229
+      Range: [0.3941, 0.4499]
 
   Saliency:
-    RelevanceRankAccuracy: 0.1585 ± 0.0171
-      Range: [0.1346, 0.1737]
+    RelevanceRankAccuracy: 0.3415 ± 0.0100
+      Range: [0.3281, 0.3519]
+    PositiveAttributionRatio: 0.4104 ± 0.0199
+      Range: [0.3831, 0.4299]
 
 DenseNet169:
 --------------------------------------------------------------------------------
 
   FeaturePermutation:
-    RelevanceRankAccuracy: 0.1876 ± 0.0374
-      Range: [0.1535, 0.2396]
+    RelevanceRankAccuracy: 0.3237 ± 0.0069
+      Range: [0.3140, 0.3298]
+    PositiveAttributionRatio: 0.3602 ± 0.0355
+      Range: [0.3291, 0.4099]
 
   GradCAM:
-    RelevanceRankAccuracy: 0.1516 ± 0.0282
-      Range: [0.1308, 0.1915]
+    RelevanceRankAccuracy: 0.3316 ± 0.0217
+      Range: [0.3060, 0.3592]
+    PositiveAttributionRatio: 0.3250 ± 0.0194
+      Range: [0.2991, 0.3457]
 
   GradientShap:
-    RelevanceRankAccuracy: 0.1238 ± 0.0104
-      Range: [0.1110, 0.1365]
+    RelevanceRankAccuracy: 0.3332 ± 0.0120
+      Range: [0.3174, 0.3467]
+    PositiveAttributionRatio: 0.3907 ± 0.0267
+      Range: [0.3597, 0.4248]
 
   IntegratedGradients:
-    RelevanceRankAccuracy: 0.1278 ± 0.0101
-      Range: [0.1167, 0.1412]
+    RelevanceRankAccuracy: 0.3355 ± 0.0139
+      Range: [0.3175, 0.3515]
+    PositiveAttributionRatio: 0.3924 ± 0.0326
+      Range: [0.3565, 0.4355]
 
   Saliency:
-    RelevanceRankAccuracy: 0.1690 ± 0.0192
-      Range: [0.1473, 0.1940]
+    RelevanceRankAccuracy: 0.3358 ± 0.0159
+      Range: [0.3139, 0.3514]
+    PositiveAttributionRatio: 0.3862 ± 0.0329
+      Range: [0.3437, 0.4237]
 
 DenseNet201:
 --------------------------------------------------------------------------------
 
   FeaturePermutation:
-    RelevanceRankAccuracy: 0.1944 ± 0.0599
-      Range: [0.1409, 0.2781]
+    RelevanceRankAccuracy: 0.3143 ± 0.0195
+      Range: [0.2880, 0.3346]
+    PositiveAttributionRatio: 0.3431 ± 0.0132
+      Range: [0.3304, 0.3613]
 
   GradCAM:
-    RelevanceRankAccuracy: 0.1804 ± 0.0130
-      Range: [0.1653, 0.1970]
+    RelevanceRankAccuracy: 0.3445 ± 0.0390
+      Range: [0.2907, 0.3820]
+    PositiveAttributionRatio: 0.3317 ± 0.0334
+      Range: [0.2876, 0.3686]
 
   GradientShap:
-    RelevanceRankAccuracy: 0.1182 ± 0.0205
-      Range: [0.0964, 0.1457]
+    RelevanceRankAccuracy: 0.3279 ± 0.0150
+      Range: [0.3114, 0.3477]
+    PositiveAttributionRatio: 0.3741 ± 0.0397
+      Range: [0.3424, 0.4301]
 
   IntegratedGradients:
-    RelevanceRankAccuracy: 0.1181 ± 0.0210
-      Range: [0.0954, 0.1460]
+    RelevanceRankAccuracy: 0.3301 ± 0.0154
+      Range: [0.3142, 0.3509]
+    PositiveAttributionRatio: 0.3775 ± 0.0367
+      Range: [0.3496, 0.4294]
 
   Saliency:
-    RelevanceRankAccuracy: 0.1589 ± 0.0248
-      Range: [0.1289, 0.1897]
+    RelevanceRankAccuracy: 0.3347 ± 0.0156
+      Range: [0.3226, 0.3568]
+    PositiveAttributionRatio: 0.3861 ± 0.0403
+      Range: [0.3492, 0.4422]
 
 ResNet101:
 --------------------------------------------------------------------------------
 
   FeaturePermutation:
-    RelevanceRankAccuracy: 0.1741 ± 0.0410
-      Range: [0.1190, 0.2172]
+    RelevanceRankAccuracy: 0.3261 ± 0.0115
+      Range: [0.3109, 0.3386]
+    PositiveAttributionRatio: 0.3323 ± 0.0070
+      Range: [0.3238, 0.3410]
 
   GradCAM:
-    RelevanceRankAccuracy: 0.1917 ± 0.0459
-      Range: [0.1268, 0.2259]
+    RelevanceRankAccuracy: 0.3484 ± 0.0279
+      Range: [0.3092, 0.3715]
+    PositiveAttributionRatio: 0.3266 ± 0.0248
+      Range: [0.2936, 0.3532]
 
   GradientShap:
-    RelevanceRankAccuracy: 0.1447 ± 0.0136
-      Range: [0.1254, 0.1547]
+    RelevanceRankAccuracy: 0.3220 ± 0.0065
+      Range: [0.3130, 0.3281]
+    PositiveAttributionRatio: 0.3371 ± 0.0075
+      Range: [0.3290, 0.3471]
 
   IntegratedGradients:
-    RelevanceRankAccuracy: 0.1491 ± 0.0186
-      Range: [0.1230, 0.1649]
+    RelevanceRankAccuracy: 0.3235 ± 0.0073
+      Range: [0.3135, 0.3309]
+    PositiveAttributionRatio: 0.3421 ± 0.0095
+      Range: [0.3323, 0.3550]
 
   Saliency:
-    RelevanceRankAccuracy: 0.1685 ± 0.0135
-      Range: [0.1538, 0.1863]
+    RelevanceRankAccuracy: 0.3290 ± 0.0102
+      Range: [0.3147, 0.3378]
+    PositiveAttributionRatio: 0.3452 ± 0.0117
+      Range: [0.3288, 0.3553]
 
 ResNet18:
 --------------------------------------------------------------------------------
 
   FeaturePermutation:
-    RelevanceRankAccuracy: 0.2027 ± 0.0220
-      Range: [0.1720, 0.2227]
+    RelevanceRankAccuracy: 0.3104 ± 0.0044
+      Range: [0.3064, 0.3165]
+    PositiveAttributionRatio: 0.3305 ± 0.0247
+      Range: [0.3047, 0.3638]
 
   GradCAM:
-    RelevanceRankAccuracy: 0.1287 ± 0.0462
-      Range: [0.0955, 0.1940]
+    RelevanceRankAccuracy: 0.3660 ± 0.0304
+      Range: [0.3439, 0.4089]
+    PositiveAttributionRatio: 0.3499 ± 0.0251
+      Range: [0.3273, 0.3849]
 
   GradientShap:
-    RelevanceRankAccuracy: 0.1692 ± 0.0202
-      Range: [0.1444, 0.1938]
+    RelevanceRankAccuracy: 0.3404 ± 0.0166
+      Range: [0.3178, 0.3570]
+    PositiveAttributionRatio: 0.3844 ± 0.0262
+      Range: [0.3477, 0.4067]
 
   IntegratedGradients:
-    RelevanceRankAccuracy: 0.1714 ± 0.0205
-      Range: [0.1466, 0.1968]
+    RelevanceRankAccuracy: 0.3428 ± 0.0172
+      Range: [0.3193, 0.3601]
+    PositiveAttributionRatio: 0.3874 ± 0.0279
+      Range: [0.3480, 0.4094]
 
   Saliency:
-    RelevanceRankAccuracy: 0.1953 ± 0.0155
-      Range: [0.1734, 0.2082]
+    RelevanceRankAccuracy: 0.3389 ± 0.0155
+      Range: [0.3176, 0.3542]
+    PositiveAttributionRatio: 0.3631 ± 0.0168
+      Range: [0.3394, 0.3757]
 
 ResNet34:
 --------------------------------------------------------------------------------
 
   FeaturePermutation:
-    RelevanceRankAccuracy: 0.2132 ± 0.0369
-      Range: [0.1757, 0.2634]
+    RelevanceRankAccuracy: 0.3227 ± 0.0025
+      Range: [0.3193, 0.3249]
+    PositiveAttributionRatio: 0.3529 ± 0.0135
+      Range: [0.3357, 0.3686]
 
   GradCAM:
-    RelevanceRankAccuracy: 0.1531 ± 0.0170
-      Range: [0.1368, 0.1766]
+    RelevanceRankAccuracy: 0.3450 ± 0.0478
+      Range: [0.2775, 0.3812]
+    PositiveAttributionRatio: 0.3341 ± 0.0365
+      Range: [0.2826, 0.3619]
 
   GradientShap:
-    RelevanceRankAccuracy: 0.1694 ± 0.0069
-      Range: [0.1629, 0.1790]
+    RelevanceRankAccuracy: 0.3461 ± 0.0143
+      Range: [0.3261, 0.3584]
+    PositiveAttributionRatio: 0.3965 ± 0.0190
+      Range: [0.3698, 0.4128]
 
   IntegratedGradients:
-    RelevanceRankAccuracy: 0.1698 ± 0.0084
-      Range: [0.1579, 0.1760]
+    RelevanceRankAccuracy: 0.3464 ± 0.0138
+      Range: [0.3274, 0.3601]
+    PositiveAttributionRatio: 0.3957 ± 0.0188
+      Range: [0.3691, 0.4105]
 
   Saliency:
-    RelevanceRankAccuracy: 0.2061 ± 0.0193
-      Range: [0.1871, 0.2326]
+    RelevanceRankAccuracy: 0.3482 ± 0.0108
+      Range: [0.3343, 0.3606]
+    PositiveAttributionRatio: 0.3845 ± 0.0247
+      Range: [0.3503, 0.4082]
 
 ResNet50:
 --------------------------------------------------------------------------------
 
   FeaturePermutation:
-    RelevanceRankAccuracy: 0.1762 ± 0.0034
-      Range: [0.1716, 0.1797]
+    RelevanceRankAccuracy: 0.3165 ± 0.0131
+      Range: [0.2982, 0.3283]
+    PositiveAttributionRatio: 0.3415 ± 0.0338
+      Range: [0.2940, 0.3696]
 
   GradCAM:
-    RelevanceRankAccuracy: 0.1479 ± 0.0340
-      Range: [0.1228, 0.1959]
+    RelevanceRankAccuracy: 0.3800 ± 0.0242
+      Range: [0.3467, 0.4037]
+    PositiveAttributionRatio: 0.3713 ± 0.0176
+      Range: [0.3465, 0.3849]
 
   GradientShap:
-    RelevanceRankAccuracy: 0.1402 ± 0.0012
-      Range: [0.1391, 0.1419]
+    RelevanceRankAccuracy: 0.3365 ± 0.0172
+      Range: [0.3146, 0.3567]
+    PositiveAttributionRatio: 0.3661 ± 0.0501
+      Range: [0.2987, 0.4185]
 
   IntegratedGradients:
-    RelevanceRankAccuracy: 0.1411 ± 0.0012
-      Range: [0.1397, 0.1427]
+    RelevanceRankAccuracy: 0.3372 ± 0.0185
+      Range: [0.3132, 0.3583]
+    PositiveAttributionRatio: 0.3664 ± 0.0538
+      Range: [0.2940, 0.4229]
 
   Saliency:
-    RelevanceRankAccuracy: 0.1839 ± 0.0044
-      Range: [0.1800, 0.1900]
+    RelevanceRankAccuracy: 0.3356 ± 0.0190
+      Range: [0.3103, 0.3562]
+    PositiveAttributionRatio: 0.3762 ± 0.0336
+      Range: [0.3299, 0.4083]
 
 ResNet50-ImageNet:
 --------------------------------------------------------------------------------
 
   FeaturePermutation:
-    RelevanceRankAccuracy: 0.2105 ± 0.0133
-      Range: [0.1924, 0.2239]
+    RelevanceRankAccuracy: 0.3551 ± 0.0092
+      Range: [0.3486, 0.3681]
+    PositiveAttributionRatio: 0.3917 ± 0.0117
+      Range: [0.3778, 0.4064]
 
   GradCAM:
-    RelevanceRankAccuracy: 0.1891 ± 0.0191
-      Range: [0.1630, 0.2082]
+    RelevanceRankAccuracy: 0.4732 ± 0.0158
+      Range: [0.4510, 0.4846]
+    PositiveAttributionRatio: 0.4674 ± 0.0193
+      Range: [0.4402, 0.4818]
 
   GradientShap:
-    RelevanceRankAccuracy: 0.1424 ± 0.0052
-      Range: [0.1367, 0.1494]
+    RelevanceRankAccuracy: 0.3405 ± 0.0084
+      Range: [0.3291, 0.3494]
+    PositiveAttributionRatio: 0.3918 ± 0.0102
+      Range: [0.3811, 0.4055]
 
   IntegratedGradients:
-    RelevanceRankAccuracy: 0.1450 ± 0.0052
-      Range: [0.1397, 0.1521]
+    RelevanceRankAccuracy: 0.3423 ± 0.0083
+      Range: [0.3310, 0.3506]
+    PositiveAttributionRatio: 0.3965 ± 0.0109
+      Range: [0.3842, 0.4107]
 
   Saliency:
-    RelevanceRankAccuracy: 0.1791 ± 0.0074
-      Range: [0.1736, 0.1895]
+    RelevanceRankAccuracy: 0.3522 ± 0.0087
+      Range: [0.3405, 0.3614]
+    PositiveAttributionRatio: 0.3959 ± 0.0100
+      Range: [0.3832, 0.4078]
 
 ========================================================================================================================
 OVERALL RANKINGS
@@ -246,14 +337,19 @@ OVERALL RANKINGS
 
 Average RelevanceRankAccuracy by XAI Method:
 --------------------------------------------------------------------------------
-  FeaturePermutation: 0.2015 ± 0.0277
-  Saliency: 0.1807 ± 0.0177
-  GradCAM: 0.1688 ± 0.0257
-  IntegratedGradients: 0.1453 ± 0.0200
-  GradientShap: 0.1436 ± 0.0199
+  GradCAM: 0.3684 ± 0.0400
+  Saliency: 0.3383 ± 0.0075
+  IntegratedGradients: 0.3361 ± 0.0078
+  GradientShap: 0.3347 ± 0.0076
+  FeaturePermutation: 0.3225 ± 0.0134
 
-Average RelevanceMassAccuracy by XAI Method:
+Average PositiveAttributionRatio by XAI Method:
 --------------------------------------------------------------------------------
+  IntegratedGradients: 0.3816 ± 0.0225
+  GradientShap: 0.3797 ± 0.0224
+  Saliency: 0.3773 ± 0.0203
+  GradCAM: 0.3562 ± 0.0420
+  FeaturePermutation: 0.3494 ± 0.0174
 
 ========================================================================================================================
 TOP PERFORMING COMBINATIONS
@@ -262,19 +358,29 @@ TOP PERFORMING COMBINATIONS
 
 Top 10 Model-XAI Method Combinations (RelevanceRankAccuracy):
 --------------------------------------------------------------------------------
- 1. DenseNet121          + FeaturePermutation  : 0.2704 ± 0.0389
- 2. CheXpert             + GradCAM             : 0.2159 ± 0.0070
- 3. ResNet34             + FeaturePermutation  : 0.2132 ± 0.0369
- 4. ResNet50-ImageNet    + FeaturePermutation  : 0.2105 ± 0.0133
- 5. CheXpert             + Saliency            : 0.2073 ± 0.0034
- 6. ResNet34             + Saliency            : 0.2061 ± 0.0193
- 7. ResNet18             + FeaturePermutation  : 0.2027 ± 0.0220
- 8. ResNet18             + Saliency            : 0.1953 ± 0.0155
- 9. DenseNet201          + FeaturePermutation  : 0.1944 ± 0.0599
-10. ResNet101            + GradCAM             : 0.1917 ± 0.0459
+ 1. ResNet50-ImageNet    + GradCAM             : 0.4732 ± 0.0158
+ 2. ResNet50             + GradCAM             : 0.3800 ± 0.0242
+ 3. DenseNet121          + GradCAM             : 0.3768 ± 0.0051
+ 4. ResNet18             + GradCAM             : 0.3660 ± 0.0304
+ 5. ResNet50-ImageNet    + FeaturePermutation  : 0.3551 ± 0.0092
+ 6. ResNet50-ImageNet    + Saliency            : 0.3522 ± 0.0087
+ 7. CheXpert             + GradCAM             : 0.3500 ± 0.0142
+ 8. ResNet101            + GradCAM             : 0.3484 ± 0.0279
+ 9. ResNet34             + Saliency            : 0.3482 ± 0.0108
+10. ResNet34             + IntegratedGradients : 0.3464 ± 0.0138
 
-Top 10 Model-XAI Method Combinations (RelevanceMassAccuracy):
+Top 10 Model-XAI Method Combinations (PositiveAttributionRatio):
 --------------------------------------------------------------------------------
+ 1. ResNet50-ImageNet    + GradCAM             : 0.4674 ± 0.0193
+ 2. DenseNet121          + IntegratedGradients : 0.4205 ± 0.0229
+ 3. DenseNet121          + GradientShap        : 0.4180 ± 0.0231
+ 4. DenseNet121          + Saliency            : 0.4104 ± 0.0199
+ 5. ResNet50-ImageNet    + IntegratedGradients : 0.3965 ± 0.0109
+ 6. ResNet34             + GradientShap        : 0.3965 ± 0.0190
+ 7. ResNet50-ImageNet    + Saliency            : 0.3959 ± 0.0100
+ 8. ResNet34             + IntegratedGradients : 0.3957 ± 0.0188
+ 9. DenseNet169          + IntegratedGradients : 0.3924 ± 0.0326
+10. ResNet50-ImageNet    + GradientShap        : 0.3918 ± 0.0102
 
 ========================================================================================================================
 INTERPRETATION GUIDE
@@ -283,7 +389,7 @@ INTERPRETATION GUIDE
 - Higher RelevanceRankAccuracy indicates the XAI method correctly identifies
   which features are important for the model's predictions
 
-- Higher RelevanceMassAccuracy indicates explanations are concentrated on
+- Higher PositiveAttributionRatio indicates explanations are concentrated on
   the most important regions of the input
 
 - Standard deviation shows consistency across seeds:

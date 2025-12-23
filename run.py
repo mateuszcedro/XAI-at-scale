@@ -1,11 +1,10 @@
 import subprocess
 
-DATASET = "covid_qu_ex"  # Options: "covid_qu_ex", "pet_processed", "chest_x_pneumo"
-
 
 def main():
     # subprocess.run(["python", "src/train_models.py",
-    #                 "--data-dir", f"./data/{DATASET}",
+    #                 "--data-dir", "./data/pet",
+    #                 "--num-runs", "1",
     #                ])
 
     # subprocess.run(["python", "src/create_model_summary.py"])

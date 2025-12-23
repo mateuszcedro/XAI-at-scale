@@ -1,0 +1,20 @@
+{
+  "ResNet50-ImageNet": {
+    "0": {
+      "seed": 14,
+      "metrics": {
+        "accuracy": 0.993234100135318,
+        "precision": 1.0,
+        "recall": 0.9901574803149606,
+        "f1": 0.9950544015825915,
+        "auc_roc": 0.9999744350138051,
+        "inference_time": 7.566480398178101,
+        "time_per_sample_ms": 10.238809740430447,
+        "num_test_samples": 739
+      },
+      "training_time": 2419.1361236572266,
+      "avg_epoch_time": 65.17009258914638,
+      "final_val_loss": 0.005252196576661167
+    }
+  }
+}

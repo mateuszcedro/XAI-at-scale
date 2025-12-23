@@ -1,0 +1,55 @@
+================================================================================
+SANITY CHECK RESULTS FOR ResNet50-ImageNet
+================================================================================
+
+LAYER-WISE RELEVANCE RANDOMIZATION:
+----------------------------------------
+
+Saliency:
+  Mean degradation: 0.9976 ± 0.0019
+  η² (effect size): 1.0000
+
+IntegratedGradients:
+  Mean degradation: 0.9954 ± 0.0025
+  η² (effect size): 1.0000
+
+GradientShap:
+  Mean degradation: 0.9963 ± 0.0021
+  η² (effect size): 1.0000
+
+GradCAM:
+  Mean degradation: 0.9685 ± 0.0366
+  η² (effect size): 1.0000
+
+FeaturePermutation:
+  Mean degradation: 0.9841 ± 0.0159
+  η² (effect size): 1.0000
+
+================================================================================
+INPUT RANDOMIZATION TEST:
+----------------------------------------
+
+Saliency:
+  Mean sensitivity: 0.068500 ± 0.000027
+  η² (effect size): 1.0000
+  Cliff's delta: 0.4400
+
+IntegratedGradients:
+  Mean sensitivity: 0.016249 ± 0.000023
+  η² (effect size): 1.0000
+  Cliff's delta: 0.1200
+
+GradientShap:
+  Mean sensitivity: 0.026711 ± 0.000242
+  η² (effect size): 1.0000
+  Cliff's delta: -0.0400
+
+GradCAM:
+  Mean sensitivity: 0.023348 ± 0.000202
+  η² (effect size): 1.0000
+  Cliff's delta: -0.1200
+
+FeaturePermutation:
+  Mean sensitivity: 0.028187 ± 0.000078
+  η² (effect size): 1.0000
+  Cliff's delta: -0.0400

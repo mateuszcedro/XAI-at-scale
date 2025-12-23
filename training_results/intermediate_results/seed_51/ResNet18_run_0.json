@@ -3,18 +3,18 @@
     "0": {
       "seed": 51,
       "metrics": {
-        "accuracy": 0.91324200913242,
-        "precision": 0.8280254777070064,
-        "recall": 0.9219858156028369,
-        "f1": 0.87248322147651,
-        "auc_roc": 0.9762638202354514,
-        "inference_time": 1.4343113899230957,
-        "time_per_sample_ms": 3.2746835386372046,
-        "num_test_samples": 438
+        "accuracy": 0.8944519621109608,
+        "precision": 0.9345991561181435,
+        "recall": 0.9040816326530612,
+        "f1": 0.9190871369294605,
+        "auc_roc": 0.9608556675682322,
+        "inference_time": 6.591407775878906,
+        "time_per_sample_ms": 8.919360995776598,
+        "num_test_samples": 739
       },
-      "training_time": 250.95219373703003,
-      "avg_epoch_time": 13.736172954241434,
-      "final_val_loss": 0.1543852507269808
+      "training_time": 1387.75115609169,
+      "avg_epoch_time": 62.86444514447992,
+      "final_val_loss": 0.2982050968294448
     }
   }
 }

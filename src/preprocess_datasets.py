@@ -316,6 +316,26 @@ class PetPreprocessor(DatasetPreprocessor):
         return img_processed
 
 
+# class PetAnimalPreprocessor(DatasetPreprocessor):
+#     """Preprocessor for Pet/Animal dataset (cats and dogs)"""
+    
+#     def __init__(self, raw_dir: str, processed_dir: str):
+#         super().__init__("Pet/Animal", raw_dir, processed_dir)
+    
+#     def preprocess_image(self, img: np.ndarray) -> np.ndarray:
+#         """Pet/Animal specific preprocessing using torchvision transforms"""
+#         # Convert numpy array to PIL Image
+#         img_pil = Image.fromarray(img)
+        
+#         # Apply test transform (includes resize, grayscale, normalization)
+#         img_tensor = self.test_transform(img_pil)
+        
+#         # Convert back to numpy array
+#         img_processed = img_tensor.numpy().squeeze()
+        
+#         return img_processed
+
+
 def preprocess_all_datasets(base_raw_dir: str, base_processed_dir: str, apply_augmentation: bool = False, dataset_type: str = "pet") -> Dict[str, Dict]:
     """
     Preprocess datasets based on type.
