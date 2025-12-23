@@ -1,6 +1,6 @@
 XAI Method,PositiveAttributionRatio_Mean,PositiveAttributionRatio_Std,PositiveAttributionRatio_Min,PositiveAttributionRatio_Max,PositiveAttributionRatio_N,RelevanceRankAccuracy_Mean,RelevanceRankAccuracy_Std,RelevanceRankAccuracy_Min,RelevanceRankAccuracy_Max,RelevanceRankAccuracy_N
-FeaturePermutation,0.3494,0.0282,0.2940,0.4099,27,0.3225,0.0184,0.2792,0.3681,27
-GradCAM,0.3562,0.0480,0.2826,0.4818,27,0.3684,0.0488,0.2775,0.4846,27
-GradientShap,0.3797,0.0352,0.2987,0.4491,27,0.3347,0.0145,0.3114,0.3584,27
-IntegratedGradients,0.3816,0.0362,0.2940,0.4499,27,0.3361,0.0151,0.3114,0.3601,27
-Saliency,0.3773,0.0320,0.3288,0.4422,27,0.3383,0.0152,0.3103,0.3614,27
+FeaturePermutation,0.0110,0.0033,0.0037,0.0188,27,0.0106,0.0051,0.0020,0.0247,27
+GradCAM,0.0118,0.0022,0.0078,0.0162,27,0.0119,0.0053,0.0035,0.0226,27
+GradientShap,0.0114,0.0035,0.0059,0.0227,27,0.0111,0.0051,0.0053,0.0289,27
+IntegratedGradients,0.0119,0.0036,0.0065,0.0230,27,0.0118,0.0055,0.0049,0.0300,27
+Saliency,0.0143,0.0031,0.0107,0.0229,27,0.0152,0.0047,0.0089,0.0264,27

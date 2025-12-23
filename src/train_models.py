@@ -1759,10 +1759,7 @@ if __name__ == "__main__":
     # Randomly draw seeds from 0 to 100
     np.random.seed(42)
     SEEDS = list(np.random.randint(0, 101, NUM_RUNS))
-    
-    # Customize paths as needed
-    # For example:
-    # DATA_DIR = "./data/processed"
+
     
     logger.info(f"Data directory: {DATA_DIR}")
     logger.info(f"Output directory: {OUTPUT_DIR}")

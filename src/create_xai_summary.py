@@ -212,7 +212,7 @@ def create_detailed_report(aggregated: Dict[str, Dict], seeds: List[str]) -> str
     report.append("  - Higher is better (range: 0-1)")
     report.append("  - Measures if important features get high attribution scores")
     report.append("")
-    report.append("PositiveAttributionRatio: How much attribution is concentrated on relevant features")
+    report.append("RelevanceMassAccuracy: How much attribution is concentrated on relevant features")
     report.append("  - Higher is better (range: 0-1)")
     report.append("  - Measures if explanations focus on important regions")
     report.append("")
@@ -239,11 +239,11 @@ def create_detailed_report(aggregated: Dict[str, Dict], seeds: List[str]) -> str
                 report.append(f"    RelevanceRankAccuracy: {stats['mean']:.4f} ± {stats['std']:.4f}")
                 report.append(f"      Range: [{stats['min']:.4f}, {stats['max']:.4f}]")
             
-            # PositiveAttributionRatio
-            key = (xai_method, "PositiveAttributionRatio")
+            # RelevanceMassAccuracy
+            key = (xai_method, "RelevanceMassAccuracy")
             if key in model_data:
                 stats = model_data[key]
-                report.append(f"    PositiveAttributionRatio: {stats['mean']:.4f} ± {stats['std']:.4f}")
+                report.append(f"    RelevanceMassAccuracy: {stats['mean']:.4f} ± {stats['std']:.4f}")
                 report.append(f"      Range: [{stats['min']:.4f}, {stats['max']:.4f}]")
     
     report.append("")
@@ -273,12 +273,12 @@ def create_detailed_report(aggregated: Dict[str, Dict], seeds: List[str]) -> str
         std_score = np.std(scores)
         report.append(f"  {xai_method}: {avg_score:.4f} ± {std_score:.4f}")
     
-    report.append("\nAverage PositiveAttributionRatio by XAI Method:")
+    report.append("\nAverage RelevanceMassAccuracy by XAI Method:")
     report.append("-" * 80)
     mass_acc_scores = {}
     for model_name, model_data in aggregated.items():
         for (xai_method, metric_type), stats in model_data.items():
-            if metric_type == "PositiveAttributionRatio":
+            if metric_type == "RelevanceMassAccuracy":
                 if xai_method not in mass_acc_scores:
                     mass_acc_scores[xai_method] = []
                 mass_acc_scores[xai_method].append(stats['mean'])
@@ -311,11 +311,11 @@ def create_detailed_report(aggregated: Dict[str, Dict], seeds: List[str]) -> str
     for i, item in enumerate(sorted(rank_acc_list, key=lambda x: -x['score'])[:10], 1):
         report.append(f"{i:2d}. {item['model']:20s} + {item['xai_method']:20s}: {item['score']:.4f} ± {item['std']:.4f}")
     
-    # Find top combinations for PositiveAttributionRatio
+    # Find top combinations for RelevanceMassAccuracy
     mass_acc_list = []
     for model_name, model_data in aggregated.items():
         for (xai_method, metric_type), stats in model_data.items():
-            if metric_type == "PositiveAttributionRatio":
+            if metric_type == "RelevanceMassAccuracy":
                 mass_acc_list.append({
                     'model': model_name,
                     'xai_method': xai_method,
@@ -323,7 +323,7 @@ def create_detailed_report(aggregated: Dict[str, Dict], seeds: List[str]) -> str
                     'std': stats['std']
                 })
     
-    report.append("\nTop 10 Model-XAI Method Combinations (PositiveAttributionRatio):")
+    report.append("\nTop 10 Model-XAI Method Combinations (RelevanceMassAccuracy):")
     report.append("-" * 80)
     for i, item in enumerate(sorted(mass_acc_list, key=lambda x: -x['score'])[:10], 1):
         report.append(f"{i:2d}. {item['model']:20s} + {item['xai_method']:20s}: {item['score']:.4f} ± {item['std']:.4f}")
@@ -336,7 +336,7 @@ def create_detailed_report(aggregated: Dict[str, Dict], seeds: List[str]) -> str
     report.append("- Higher RelevanceRankAccuracy indicates the XAI method correctly identifies")
     report.append("  which features are important for the model's predictions")
     report.append("")
-    report.append("- Higher PositiveAttributionRatio indicates explanations are concentrated on")
+    report.append("- Higher RelevanceMassAccuracy indicates explanations are concentrated on")
     report.append("  the most important regions of the input")
     report.append("")
     report.append("- Standard deviation shows consistency across seeds:")

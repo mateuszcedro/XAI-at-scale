@@ -42,7 +42,6 @@ from captum.attr import Saliency, IntegratedGradients, GradientShap, LayerGradCa
 import quantus
 from scipy import stats
 from scipy.stats import kruskal, mannwhitneyu
-from scipy.ndimage import zoom as scipy_zoom
 import copy as copy_module
 from statsmodels.stats.multitest import multipletests
 
@@ -77,8 +76,8 @@ class Config:
 
     # Dataset configuration
     # DATASET = "covid_qu_ex"
-    DATASET = "pet_processed"
-    # DATASET = "chest_x_pneumo"
+    # DATASET = "pet_processed"
+    DATASET = "chest_x_pneumo"
 
     # Adjust class names based on dataset
     if DATASET == "covid_qu_ex":
@@ -86,16 +85,23 @@ class Config:
         CLASS_0_NAME_MASKS = "infection_masks"
         CLASS_1_NAME = "Normal"
         CLASS_1_NAME_MASKS = "lung_masks"
+        MASK_CLASS_LABEL = None  # Both classes have masks
+        MASK_CLASS_NAME = None
     elif DATASET == "pet_processed":
         CLASS_0_NAME = "cat"
         CLASS_0_NAME_MASKS = "masks"
         CLASS_1_NAME = "dog" 
         CLASS_1_NAME_MASKS = "masks"
+        MASK_CLASS_LABEL = None  # Both classes have masks
+        MASK_CLASS_NAME = None
     elif DATASET == "chest_x_pneumo":
         CLASS_0_NAME = "no_pneumo"
-        # CLASS_0_NAME_MASKS = "masks"
+        CLASS_0_NAME_MASKS = "masks"  # Empty - no masks for healthy class
         CLASS_1_NAME = "pneumo"
         CLASS_1_NAME_MASKS = "masks"
+        # Only class 1 (pneumo) has masks - set this for XAI evaluation
+        MASK_CLASS_LABEL = 1  # Label of the class with masks
+        MASK_CLASS_NAME = CLASS_1_NAME
     else:
         print(f"Unknown DATASET: {DATASET}. Please configure class names accordingly.")
 
@@ -205,23 +211,31 @@ def load_test_data(transforms_test, seed: int = 42):
     logger.info(f"Class names: {class_names}")
     
     # Load masks with matching structure
+    # For datasets where only one class has masks (e.g., chest_x_pneumo), we load only those
     class MaskDataset(torch.utils.data.Dataset):
-        def __init__(self, class_0_mask_dir, class_1_mask_dir, transforms=None):
+        def __init__(self, class_0_mask_dir, class_1_mask_dir, transforms=None, single_class_label=None):
             self.transforms = transforms
             self.masks = []
             self.labels = []
+            self.image_names = []  # Store image names for matching
             
-            # Load class_0 masks (label 0)
-            class_0_mask_files = sorted([f for f in os.listdir(class_0_mask_dir) if f.endswith(('.png', '.jpg', '.jpeg'))])
-            for f in class_0_mask_files:
-                self.masks.append(os.path.join(class_0_mask_dir, f))
-                self.labels.append(0)
+            # Load class_0 masks (label 0) - skip if single_class_label is set and != 0
+            if single_class_label is None or single_class_label == 0:
+                if os.path.exists(class_0_mask_dir):
+                    class_0_mask_files = sorted([f for f in os.listdir(class_0_mask_dir) if f.endswith(('.png', '.jpg', '.jpeg'))])
+                    for f in class_0_mask_files:
+                        self.masks.append(os.path.join(class_0_mask_dir, f))
+                        self.labels.append(0)
+                        self.image_names.append(f)
             
-            # Load class_1 masks (label 1)
-            class_1_mask_files = sorted([f for f in os.listdir(class_1_mask_dir) if f.endswith(('.png', '.jpg', '.jpeg'))])
-            for f in class_1_mask_files:
-                self.masks.append(os.path.join(class_1_mask_dir, f))
-                self.labels.append(1)
+            # Load class_1 masks (label 1) - skip if single_class_label is set and != 1
+            if single_class_label is None or single_class_label == 1:
+                if os.path.exists(class_1_mask_dir):
+                    class_1_mask_files = sorted([f for f in os.listdir(class_1_mask_dir) if f.endswith(('.png', '.jpg', '.jpeg'))])
+                    for f in class_1_mask_files:
+                        self.masks.append(os.path.join(class_1_mask_dir, f))
+                        self.labels.append(1)
+                        self.image_names.append(f)
         
         def __len__(self):
             return len(self.masks)
@@ -239,111 +253,20 @@ def load_test_data(transforms_test, seed: int = 42):
     mask_dataset = MaskDataset(
         f"{test_root}/{Config.CLASS_0_NAME}/{Config.CLASS_0_NAME_MASKS}",
         f"{test_root}/{Config.CLASS_1_NAME}/{Config.CLASS_1_NAME_MASKS}",
-        transforms_test
+        transforms_test,
+        single_class_label=Config.MASK_CLASS_LABEL
     )
     mask_dataloader = torch.utils.data.DataLoader(
         mask_dataset, batch_size=Config.BATCH_SIZE, shuffle=False, num_workers=4
     )
     
     logger.info(f"Mask set size: {len(mask_dataset)}")
-    logger.info(f"Masks loaded from both class_0 and class_1 classes")
+    if Config.MASK_CLASS_LABEL is not None:
+        logger.info(f"Masks loaded from class {Config.MASK_CLASS_LABEL} ({Config.MASK_CLASS_NAME}) only")
+    else:
+        logger.info(f"Masks loaded from both classes")
     
     return test_dataset, test_loader, mask_dataset, mask_dataloader
-
-
-def get_aligned_image_mask_batch(test_dataset, transforms_test, num_samples: int = 32):
-    """
-    Get a batch of images and their corresponding masks aligned by filename.
-    
-    This ensures that each image is paired with its correct mask by matching filenames.
-    
-    Args:
-        test_dataset: The test dataset containing image_paths attribute
-        transforms_test: Transforms to apply to masks
-        num_samples: Number of samples to return
-        
-    Returns:
-        Tuple of (images_tensor, masks_tensor, labels_tensor) all aligned by filename
-    """
-    logger.info(f"Loading aligned image-mask pairs by filename...")
-    
-    # Get image paths from test dataset
-    if hasattr(test_dataset, 'image_paths'):
-        image_paths = test_dataset.image_paths
-    elif hasattr(test_dataset, 'samples'):
-        image_paths = [s[0] for s in test_dataset.samples]
-    else:
-        raise ValueError("Cannot extract image paths from test_dataset")
-    
-    num_samples = min(num_samples, len(image_paths))
-    
-    images = []
-    masks = []
-    labels = []
-    
-    for idx in range(num_samples):
-        img_path = image_paths[idx]
-        
-        # Extract filename and determine class from path
-        # Path format: .../class_name/images/filename.png
-        path_parts = img_path.split(os.sep)
-        filename = os.path.basename(img_path)
-        
-        # Find class name (parent of 'images' folder)
-        if 'images' in path_parts:
-            images_idx = path_parts.index('images')
-            class_name = path_parts[images_idx - 1]
-        else:
-            # Fallback: assume second-to-last directory is class name
-            class_name = path_parts[-2]
-        
-        # Determine mask directory based on class
-        if class_name == Config.CLASS_0_NAME:
-            mask_dir = f"{Config.DATA_ROOT}/{Config.CLASS_0_NAME}/{Config.CLASS_0_NAME_MASKS}"
-            label = 0
-        else:
-            mask_dir = f"{Config.DATA_ROOT}/{Config.CLASS_1_NAME}/{Config.CLASS_1_NAME_MASKS}"
-            label = 1
-        
-        mask_path = os.path.join(mask_dir, filename)
-        
-        # Load image
-        try:
-            img = Image.open(img_path).convert('L')
-            img = transforms_test(img)
-            images.append(img)
-        except Exception as e:
-            logger.warning(f"Failed to load image {img_path}: {e}")
-            continue
-        
-        # Load corresponding mask
-        if os.path.exists(mask_path):
-            try:
-                mask = Image.open(mask_path).convert('L')
-                mask = transforms_test(mask)
-                masks.append(mask)
-                labels.append(label)
-            except Exception as e:
-                logger.warning(f"Failed to load mask {mask_path}: {e}")
-                # Remove the image we just added since mask failed
-                images.pop()
-                continue
-        else:
-            logger.warning(f"Mask not found: {mask_path}")
-            # Remove the image we just added since mask not found
-            images.pop()
-            continue
-    
-    if len(images) == 0:
-        raise ValueError("No valid image-mask pairs found!")
-    
-    images_tensor = torch.stack(images)
-    masks_tensor = torch.stack(masks)
-    labels_tensor = torch.tensor(labels)
-    
-    logger.info(f"Loaded {len(images)} aligned image-mask pairs")
-    
-    return images_tensor, masks_tensor, labels_tensor
 
 
 def load_model(model_path: Optional[str] = None) -> nn.Module:
@@ -1469,25 +1392,57 @@ def generate_explanations_full_test_set(model, test_dataloader, mask_dataloader,
     all_mask_data = torch.cat(all_mask_data, dim=0)
     all_mask_labels = torch.cat(all_mask_labels, dim=0)
     
-    # Select balanced samples: 100 from each class
-    class_0_indices = np.where(all_input_labels.numpy() == 0)[0]
-    class_1_indices = np.where(all_input_labels.numpy() == 1)[0]
-    
-    logger.info(f"Available samples: {len(class_0_indices)} class 0, {len(class_1_indices)} class 1")
-    
-    # Randomly select num_per_class from each
-    selected_class_0 = np.random.choice(class_0_indices, min(num_per_class, len(class_0_indices)), replace=False)
-    selected_class_1 = np.random.choice(class_1_indices, min(num_per_class, len(class_1_indices)), replace=False)
-    
-    selected_indices = np.concatenate([selected_class_0, selected_class_1])
-    np.random.shuffle(selected_indices)
-    
-    logger.info(f"Selected {len(selected_class_0)} class 0 and {len(selected_class_1)} class 1 samples")
-    
-    # Get selected data and corresponding masks
-    selected_inputs = all_inputs[selected_indices]
-    selected_labels = all_input_labels[selected_indices]
-    selected_masks = all_mask_data[selected_indices]
+    # Select samples - if only one class has masks, use only that class
+    if Config.MASK_CLASS_LABEL is not None:
+        # Only select from the class that has masks
+        mask_class_indices = np.where(all_input_labels.numpy() == Config.MASK_CLASS_LABEL)[0]
+        logger.info(f"Only class {Config.MASK_CLASS_LABEL} ({Config.MASK_CLASS_NAME}) has masks")
+        logger.info(f"Available samples with masks: {len(mask_class_indices)}")
+        
+        # Select up to num_per_class * 2 samples from the mask class (to maintain similar sample size)
+        num_to_select = min(num_per_class * 2, len(mask_class_indices))
+        selected_indices = np.random.choice(mask_class_indices, num_to_select, replace=False)
+        np.random.shuffle(selected_indices)
+        
+        logger.info(f"Selected {num_to_select} samples from class {Config.MASK_CLASS_LABEL}")
+        
+        # For masks, we need to match by position within the class
+        # Since mask dataset only contains masks for this class, indices are 0 to len(masks)-1
+        # We need to map image indices to mask indices
+        # Image indices within class = selected_indices - min(mask_class_indices) won't work
+        # Instead, find position of each selected index within the class
+        class_positions = np.searchsorted(np.sort(mask_class_indices), selected_indices)
+        # But since we're selecting randomly, we need a different approach
+        # Use the mask indices directly (0 to num_masks-1) and match with images
+        
+        # Get the sorted indices of this class in the original dataset
+        all_class_indices_sorted = np.sort(mask_class_indices)
+        # Map selected indices to their position within the class
+        selected_positions = np.array([np.where(all_class_indices_sorted == idx)[0][0] for idx in selected_indices])
+        
+        selected_inputs = all_inputs[selected_indices]
+        selected_labels = all_input_labels[selected_indices]
+        selected_masks = all_mask_data[selected_positions]  # Use positions within mask dataset
+    else:
+        # Both classes have masks - use balanced sampling
+        class_0_indices = np.where(all_input_labels.numpy() == 0)[0]
+        class_1_indices = np.where(all_input_labels.numpy() == 1)[0]
+        
+        logger.info(f"Available samples: {len(class_0_indices)} class 0, {len(class_1_indices)} class 1")
+        
+        # Randomly select num_per_class from each
+        selected_class_0 = np.random.choice(class_0_indices, min(num_per_class, len(class_0_indices)), replace=False)
+        selected_class_1 = np.random.choice(class_1_indices, min(num_per_class, len(class_1_indices)), replace=False)
+        
+        selected_indices = np.concatenate([selected_class_0, selected_class_1])
+        np.random.shuffle(selected_indices)
+        
+        logger.info(f"Selected {len(selected_class_0)} class 0 and {len(selected_class_1)} class 1 samples")
+        
+        # For balanced datasets, masks and images should align by index
+        selected_inputs = all_inputs[selected_indices]
+        selected_labels = all_input_labels[selected_indices]
+        selected_masks = all_mask_data[selected_indices]
     
     # Process selected samples in batches
     num_batches = int(np.ceil(len(selected_inputs) / Config.BATCH_SIZE))
@@ -1585,7 +1540,7 @@ def generate_explanations_full_test_set(model, test_dataloader, mask_dataloader,
     return explanations_all, all_labels, all_preds, xai_timing
 
 
-def evaluate_xai_against_masks(model, explanations_all, x_batch, y_pred, s_batch, device_to_use=device):
+def evaluate_xai_against_masks(model, explanations_all, x_batch, y_pred, s_batch, device_to_use=device, y_true=None):
     """Evaluate XAI methods against ground truth masks using Relevance metrics.
     
     Args:
@@ -1595,6 +1550,7 @@ def evaluate_xai_against_masks(model, explanations_all, x_batch, y_pred, s_batch
         y_pred: Predictions (aligned with explanations)
         s_batch: Ground truth masks (aligned with explanations)
         device_to_use: Device to use for computation
+        y_true: True labels (optional). If provided, only evaluates on class 1 (pneumothorax with GT masks)
     """
     logger.info("Evaluating XAI methods against ground truth masks...")
     
@@ -1605,6 +1561,30 @@ def evaluate_xai_against_masks(model, explanations_all, x_batch, y_pred, s_batch
     x_batch = x_batch[:num_samples]
     y_pred = y_pred[:num_samples]
     s_batch = s_batch[:num_samples]
+
+    # Filter to only class 1 (pneumothorax with ground truth masks) if y_true is provided
+    if y_true is not None:
+        y_true = y_true[:num_samples]
+        class_1_mask = y_true == 1
+        num_class_1 = np.sum(class_1_mask)
+
+        if num_class_1 > 0:
+            logger.info(
+                f"Filtering to class 1 (pneumothorax with GT masks): {num_class_1}/{num_samples} samples"
+            )
+            x_batch = x_batch[class_1_mask]
+            y_pred = y_pred[class_1_mask]
+            s_batch = s_batch[class_1_mask]
+
+            # Filter all explanations
+            for method in explanations_all.keys():
+                explanations_all[method] = explanations_all[method][class_1_mask]
+
+            num_samples = num_class_1
+        else:
+            logger.warning("No class 1 samples found!")
+    else:
+        logger.warning("Evaluating on samples form both classes (no filtering applied)")
     
     # Verify shapes
     logger.info(f"x_batch shape: {x_batch.shape}")
@@ -2168,7 +2148,7 @@ def input_randomization_test(model, x_batch, y_batch, explainer_wrapper_func, nu
         y_batch = y_batch.cpu().numpy()
     
     results = {}
-    batch_size = min(len(x_batch), 32)  # Test on first 32 samples
+    batch_size = min(len(x_batch), 10)  # Test on first 10 samples 
     x_test = x_batch[:batch_size]
     y_test = y_batch[:batch_size]
     
@@ -2336,507 +2316,6 @@ def interpret_effect_size(value, measure_type='cliffs_delta'):
             return "Large"
     else:
         return "Unknown"
-
-
-# ============================================================================
-# SANITY CHECK VISUALIZATIONS
-# ============================================================================
-
-# Create singleton instance of PAR metric for single-instance evaluation
-_par_metric = None
-
-def get_par_metric():
-    """Get or create PAR metric singleton."""
-    global _par_metric
-    if _par_metric is None:
-        _par_metric = PositiveAttributionRatio(
-            abs=False,
-            normalise=True,
-            disable_warnings=True,
-            display_progressbar=False
-        )
-    return _par_metric
-
-
-def compute_par_single(explanation: np.ndarray, mask: np.ndarray) -> float:
-    """
-    Compute Positive Attribution Ratio for a single instance using the existing PAR class.
-    
-    Args:
-        explanation: Attribution map
-        mask: Ground truth mask
-        
-    Returns:
-        float: PAR score (0 to 1, higher is better)
-    """
-    par_metric = get_par_metric()
-    
-    # Ensure proper shapes - flatten for evaluate_instance
-    a = explanation.copy()
-    s = mask.copy()
-    
-    # Handle normalization (mask may be normalized to [-1, 1] by transforms)
-    # Convert to binary: positive values -> 1, rest -> 0
-    if s.max() <= 1.0 and s.min() >= -1.0:
-        # Normalized mask: threshold at 0 (values > 0 are foreground)
-        s = (s > 0).astype(float)
-    elif s.max() > 1:
-        # Unnormalized mask (0-255): threshold at 127
-        s = (s > 127).astype(float)
-    
-    # Use the evaluate_instance method from PositiveAttributionRatio
-    score = par_metric.evaluate_instance(
-        model=None,
-        x=np.zeros_like(a),  # x is not used in evaluate_instance
-        y=np.array([0]),      # y is not used in evaluate_instance
-        a=a,
-        s=s
-    )
-    
-    return float(score) if not np.isnan(score) else 0.0
-
-
-def compute_rra_single(explanation: np.ndarray, mask: np.ndarray) -> float:
-    """
-    Compute Relevance Rank Accuracy for a single instance.
-    
-    RRA measures how well the top-k attributed pixels overlap with the ground truth mask,
-    where k is the number of pixels in the mask.
-    
-    Based on quantus.RelevanceRankAccuracy implementation.
-    
-    Args:
-        explanation: Attribution map
-        mask: Ground truth mask
-        
-    Returns:
-        float: RRA score (0 to 1, higher is better)
-    """
-    a = explanation.copy()
-    s = mask.copy()
-    
-    # Handle normalization (mask may be normalized to [-1, 1] by transforms)
-    if s.max() <= 1.0 and s.min() >= -1.0:
-        # Normalized mask: threshold at 0 (values > 0 are foreground)
-        s = (s > 0).astype(float)
-    elif s.max() > 1:
-        # Unnormalized mask (0-255): threshold at 127
-        s = (s > 127).astype(float)
-    
-    # Flatten arrays
-    a_flat = a.flatten()
-    s_flat = s.flatten().astype(bool)
-    
-    # Number of pixels in the mask
-    num_mask_pixels = np.sum(s_flat)
-    if num_mask_pixels == 0:
-        return np.nan
-    
-    # Normalize attributions
-    a_max = np.max(np.abs(a_flat))
-    if a_max > 0:
-        a_flat = a_flat / a_max
-    
-    # Get indices of top-k attributed pixels (k = number of mask pixels)
-    top_k_indices = np.argsort(a_flat)[-int(num_mask_pixels):]
-    
-    # Count how many of top-k are within the mask
-    hits = np.sum(s_flat[top_k_indices])
-    
-    return float(hits / num_mask_pixels)
-
-
-def visualize_layer_wise_randomization(model, x_batch, y_batch, explainer_wrapper_func, 
-                                        model_name: str, masks_batch=None, num_examples: int = 2):
-    """
-    Visualize how explanations change when a layer is randomized.
-    
-    For each example, shows:
-    - Row 1: Original image with mask overlay + prediction | 5 XAI methods with PAR/RRA
-    - Row 2: "Layer Randomized" indicator | 5 XAI methods for model with randomized layer
-    
-    Args:
-        model: Original trained model
-        x_batch: Input batch (tensor or numpy)
-        y_batch: Target batch (tensor or numpy)
-        explainer_wrapper_func: Function to generate explanations
-        model_name: Name of the model for saving
-        masks_batch: Ground truth masks (tensor or numpy), optional
-        num_examples: Number of examples to visualize (default: 2)
-    """
-    logger.info(f"\n[VISUALIZATION] Creating layer-wise randomization visualization for {model_name}...")
-    
-    device_to_use = device
-    model_original = copy_module.deepcopy(model)
-    model_original.eval()
-    
-    # Keep original tensor for prediction
-    if isinstance(x_batch, torch.Tensor):
-        x_batch_tensor = x_batch.to(device_to_use)
-        x_batch_np = x_batch.cpu().numpy()
-    else:
-        x_batch_tensor = torch.from_numpy(x_batch).to(device_to_use)
-        x_batch_np = x_batch
-    
-    if isinstance(y_batch, torch.Tensor):
-        y_batch_np = y_batch.cpu().numpy()
-    else:
-        y_batch_np = y_batch
-    
-    # Convert masks to numpy if provided
-    masks_np = None
-    if masks_batch is not None:
-        if isinstance(masks_batch, torch.Tensor):
-            masks_np = masks_batch.cpu().numpy()
-        else:
-            masks_np = masks_batch
-    
-    # Select examples to visualize
-    num_examples = min(num_examples, len(x_batch_np))
-    
-    # Get all trainable parameters and select a deep layer to randomize
-    all_params = list(model.named_parameters())
-    # Select a layer from the middle-deep part of the network (around 75% depth)
-    layer_idx = int(len(all_params) * 0.75)
-    param_name, _ = all_params[layer_idx]
-    
-    # Create model with randomized layer (once, reuse for all examples)
-    model_perturbed = copy_module.deepcopy(model_original)
-    with torch.no_grad():
-        for name, p in model_perturbed.named_parameters():
-            if name == param_name:
-                p.data = torch.randn_like(p.data)
-    
-    methods = ["Saliency", "IntegratedGradients", "GradientShap", "FeaturePermutation", "GradCAM"]
-    
-    # Layout: 6 columns (Image + 5 methods), 2 rows per example (original + perturbed)
-    num_cols = 1 + len(methods)  # Image + 5 methods = 6 columns
-    rows_per_example = 2  # Original row + Perturbed row
-    num_rows = num_examples * rows_per_example
-    
-    fig, axes = plt.subplots(num_rows, num_cols, figsize=(3.5 * num_cols, 3.5 * num_rows), dpi=Config.DPI)
-    
-    if num_rows == 1:
-        axes = axes.reshape(1, -1)
-    
-    for example_idx in range(num_examples):
-        x_single = x_batch_np[example_idx:example_idx + 1]
-        y_single = y_batch_np[example_idx:example_idx + 1]
-        x_single_tensor = x_batch_tensor[example_idx:example_idx + 1]
-        
-        # Get model prediction with probability
-        with torch.no_grad():
-            logits = model_original(x_single_tensor)
-            probs = F.softmax(logits, dim=1)
-            pred_class = torch.argmax(probs, dim=1).item()
-            pred_prob = probs[0, pred_class].item()
-        
-        # Calculate base row for this example
-        base_row = example_idx * rows_per_example
-        
-        # Get image for this example
-        img = x_single[0, 0] if x_single.ndim == 4 else x_single[0]
-        
-        # Get mask if provided
-        mask_vis = None
-        mask_flat = None
-        if masks_np is not None:
-            mask_single = masks_np[example_idx]
-            mask_vis = mask_single[0] if mask_single.ndim == 3 else mask_single
-            mask_flat = mask_vis.flatten()
-        
-        # Row 1: Original image with mask + 5 original explanations
-        orig_row = base_row
-        
-        # Original image with mask overlay and prediction
-        axes[orig_row, 0].imshow(img, cmap='gray')
-        if mask_vis is not None:
-            axes[orig_row, 0].imshow(mask_vis, cmap='Reds', alpha=0.4)
-        class_name = "Cat" if pred_class == 0 else "Dog"
-        axes[orig_row, 0].set_title(f'Example {example_idx + 1}\nPred: {class_name} ({pred_prob:.1%})', fontsize=12)
-        axes[orig_row, 0].axis('off')
-        
-        # Row 2: Layer randomized indicator + 5 perturbed explanations
-        pert_row = base_row + 1
-        
-        # Show layer info instead of image
-        layer_name_short = param_name.split('.')[-2] if '.' in param_name else param_name[:20]
-        axes[pert_row, 0].text(0.5, 0.5, f'Layer {layer_idx + 1}\nRandomized\n({layer_name_short})', 
-                               ha='center', va='center', fontsize=12, transform=axes[pert_row, 0].transAxes,
-                               bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
-        axes[pert_row, 0].set_title('Model Perturbed', fontsize=12)
-        axes[pert_row, 0].axis('off')
-        
-        # Generate explanations for each method
-        for method_idx, method in enumerate(methods):
-            col = 1 + method_idx
-            
-            # Get original explanation
-            original_expl = explainer_wrapper_func(
-                model=model_original,
-                inputs=x_single,
-                targets=y_single,
-                device=device_to_use,
-                nr_channels=1,
-                img_size=Config.IMG_SIZE,
-                method=method,
-            )
-            
-            # Get perturbed explanation
-            perturbed_expl = explainer_wrapper_func(
-                model=model_perturbed,
-                inputs=x_single,
-                targets=y_single,
-                device=device_to_use,
-                nr_channels=1,
-                img_size=Config.IMG_SIZE,
-                method=method,
-            )
-            
-            # Process original explanation
-            expl_vis_orig = original_expl[0] if original_expl.ndim > 2 else original_expl
-            if expl_vis_orig.ndim == 3:
-                expl_vis_orig = expl_vis_orig[0] if expl_vis_orig.shape[0] == 1 else np.mean(expl_vis_orig, axis=0)
-            
-            # Process perturbed explanation
-            expl_vis_pert = perturbed_expl[0] if perturbed_expl.ndim > 2 else perturbed_expl
-            if expl_vis_pert.ndim == 3:
-                expl_vis_pert = expl_vis_pert[0] if expl_vis_pert.shape[0] == 1 else np.mean(expl_vis_pert, axis=0)
-            
-            # Compute correlation
-            orig_flat = original_expl.flatten()
-            pert_flat = perturbed_expl.flatten()
-            if np.std(orig_flat) > 0 and np.std(pert_flat) > 0:
-                corr = np.corrcoef(orig_flat, pert_flat)[0, 1]
-            else:
-                corr = 0.0
-            
-            # Compute PAR and RRA for original explanation
-            par_orig = rra_orig = np.nan
-            if mask_vis is not None:
-                par_orig = compute_par_single(expl_vis_orig, mask_vis)
-                rra_orig = compute_rra_single(expl_vis_orig, mask_vis)
-            
-            # Compute PAR and RRA for perturbed explanation
-            par_pert = rra_pert = np.nan
-            if mask_vis is not None:
-                par_pert = compute_par_single(expl_vis_pert, mask_vis)
-                rra_pert = compute_rra_single(expl_vis_pert, mask_vis)
-            
-            # Plot original explanation (Row 1)
-            axes[orig_row, col].imshow(normalize_image(expl_vis_orig), cmap=Config.COLORMAP)
-            if mask_vis is not None:
-                axes[orig_row, col].set_title(f'{method}\nPAR={par_orig:.2f} RRA={rra_orig:.2f}', fontsize=12)
-            else:
-                axes[orig_row, col].set_title(f'{method}', fontsize=12)
-            axes[orig_row, col].axis('off')
-            
-            # Plot perturbed explanation (Row 2)
-            axes[pert_row, col].imshow(normalize_image(expl_vis_pert), cmap=Config.COLORMAP)
-            if mask_vis is not None:
-                axes[pert_row, col].set_title(f'{method} r={corr:.2f}\nPAR={par_pert:.2f} RRA={rra_pert:.2f}', fontsize=12)
-            else:
-                axes[pert_row, col].set_title(f'{method}\n(r={corr:.2f})', fontsize=12)
-            axes[pert_row, col].axis('off')
-    
-    plt.suptitle(f'Layer-wise Randomization: {model_name}\n(Showing how explanations degrade when model layer is randomized)', 
-                 fontsize=16, fontweight='bold', y=1.02)
-    plt.tight_layout()
-    
-    plot_path = os.path.join(Config.PLOTS_DIR, f'sanity_layer_randomization_{model_name}.png')
-    plt.savefig(plot_path, dpi=Config.DPI, bbox_inches='tight')
-    logger.info(f"Saved layer-wise randomization visualization to {plot_path}")
-    plt.close()
-    
-    del model_original
-    del model_perturbed
-    gc.collect()
-
-
-def visualize_input_randomization(model, x_batch, y_batch, explainer_wrapper_func,
-                                   model_name: str, masks_batch=None, num_examples: int = 2):
-    """
-    Visualize how explanations change when input is randomly perturbed.
-    
-    For each example, shows:
-    - Row 1: Original image with mask overlay + prediction | 5 XAI methods with PAR/RRA
-    - Row 2: Perturbed image (shuffled pixels) | 5 XAI methods for perturbed input with L2 distance
-    
-    Args:
-        model: Trained model
-        x_batch: Input batch (tensor or numpy)
-        y_batch: Target batch (tensor or numpy)
-        explainer_wrapper_func: Function to generate explanations
-        model_name: Name of the model for saving
-        masks_batch: Ground truth masks (tensor or numpy), optional
-        num_examples: Number of examples to visualize (default: 2)
-    """
-    logger.info(f"\n[VISUALIZATION] Creating input randomization visualization for {model_name}...")
-    
-    device_to_use = device
-    model.eval()
-    
-    # Keep original tensor for prediction
-    if isinstance(x_batch, torch.Tensor):
-        x_batch_tensor = x_batch.to(device_to_use)
-        x_batch_np = x_batch.cpu().numpy()
-    else:
-        x_batch_tensor = torch.from_numpy(x_batch).to(device_to_use)
-        x_batch_np = x_batch.copy()
-    
-    if isinstance(y_batch, torch.Tensor):
-        y_batch_np = y_batch.cpu().numpy()
-    else:
-        y_batch_np = y_batch
-    
-    # Convert masks to numpy if provided
-    masks_np = None
-    if masks_batch is not None:
-        if isinstance(masks_batch, torch.Tensor):
-            masks_np = masks_batch.cpu().numpy()
-        else:
-            masks_np = masks_batch
-    
-    # Select examples to visualize
-    num_examples = min(num_examples, len(x_batch_np))
-    
-    methods = ["Saliency", "IntegratedGradients", "GradientShap", "FeaturePermutation", "GradCAM"]
-    
-    # Layout: 6 columns (Image + 5 methods), 2 rows per example (original + perturbed)
-    num_cols = 1 + len(methods)  # Image + 5 methods = 6 columns
-    rows_per_example = 2  # Original row + Perturbed row
-    num_rows = num_examples * rows_per_example
-    
-    fig, axes = plt.subplots(num_rows, num_cols, figsize=(3.5 * num_cols, 3.5 * num_rows), dpi=Config.DPI)
-    
-    if num_rows == 1:
-        axes = axes.reshape(1, -1)
-    
-    for example_idx in range(num_examples):
-        x_single = x_batch_np[example_idx:example_idx + 1]
-        y_single = y_batch_np[example_idx:example_idx + 1]
-        x_single_tensor = x_batch_tensor[example_idx:example_idx + 1]
-        
-        # Get model prediction with probability
-        with torch.no_grad():
-            logits = model(x_single_tensor)
-            probs = F.softmax(logits, dim=1)
-            pred_class = torch.argmax(probs, dim=1).item()
-            pred_prob = probs[0, pred_class].item()
-        
-        # Calculate base row for this example
-        base_row = example_idx * rows_per_example
-        
-        # Get image for this example
-        img = x_single[0, 0] if x_single.ndim == 4 else x_single[0]
-        
-        # Get mask if provided
-        mask_vis = None
-        if masks_np is not None:
-            mask_single = masks_np[example_idx]
-            mask_vis = mask_single[0] if mask_single.ndim == 3 else mask_single
-        
-        # Generate one perturbed input (shuffled pixels)
-        x_permuted = x_single.copy()
-        for sample_idx in range(x_permuted.shape[0]):
-            perm_indices = np.random.permutation(x_permuted[sample_idx].size)
-            x_permuted[sample_idx] = x_permuted[sample_idx].flatten()[perm_indices].reshape(x_permuted[sample_idx].shape)
-        pert_img = x_permuted[0, 0] if x_permuted.ndim == 4 else x_permuted[0]
-        
-        # Row 1: Original image with mask + 5 original explanations
-        orig_row = base_row
-        
-        # Original image with mask overlay and prediction
-        axes[orig_row, 0].imshow(img, cmap='gray')
-        if mask_vis is not None:
-            axes[orig_row, 0].imshow(mask_vis, cmap='Reds', alpha=0.4)
-        class_name = "Cat" if pred_class == 0 else "Dog"
-        axes[orig_row, 0].set_title(f'Example {example_idx + 1}\nPred: {class_name} ({pred_prob:.1%})', fontsize=12)
-        axes[orig_row, 0].axis('off')
-        
-        # Row 2: Perturbed image + 5 perturbed explanations
-        pert_row = base_row + 1
-        
-        # Perturbed image
-        axes[pert_row, 0].imshow(pert_img, cmap='gray')
-        axes[pert_row, 0].set_title('Perturbed\n(Shuffled Pixels)', fontsize=12)
-        axes[pert_row, 0].axis('off')
-        
-        # Generate explanations for each method
-        for method_idx, method in enumerate(methods):
-            col = 1 + method_idx
-            
-            # Get original explanation
-            original_expl = explainer_wrapper_func(
-                model=model,
-                inputs=x_single,
-                targets=y_single,
-                device=device_to_use,
-                nr_channels=1,
-                img_size=Config.IMG_SIZE,
-                method=method,
-            )
-            
-            # Get perturbed explanation
-            perturbed_expl = explainer_wrapper_func(
-                model=model,
-                inputs=x_permuted,
-                targets=y_single,
-                device=device_to_use,
-                nr_channels=1,
-                img_size=Config.IMG_SIZE,
-                method=method,
-            )
-            
-            # Process original explanation
-            expl_vis_orig = original_expl[0] if original_expl.ndim > 2 else original_expl
-            if expl_vis_orig.ndim == 3:
-                expl_vis_orig = expl_vis_orig[0] if expl_vis_orig.shape[0] == 1 else np.mean(expl_vis_orig, axis=0)
-            
-            # Process perturbed explanation
-            expl_vis_pert = perturbed_expl[0] if perturbed_expl.ndim > 2 else perturbed_expl
-            if expl_vis_pert.ndim == 3:
-                expl_vis_pert = expl_vis_pert[0] if expl_vis_pert.shape[0] == 1 else np.mean(expl_vis_pert, axis=0)
-            
-            # Compute L2 distance
-            sensitivity = np.sqrt(np.mean((original_expl - perturbed_expl) ** 2))
-            
-            # Compute PAR and RRA for original explanation
-            par_orig = rra_orig = np.nan
-            if mask_vis is not None:
-                par_orig = compute_par_single(expl_vis_orig, mask_vis)
-                rra_orig = compute_rra_single(expl_vis_orig, mask_vis)
-            
-            # Compute PAR and RRA for perturbed explanation
-            par_pert = rra_pert = np.nan
-            if mask_vis is not None:
-                par_pert = compute_par_single(expl_vis_pert, mask_vis)
-                rra_pert = compute_rra_single(expl_vis_pert, mask_vis)
-            
-            # Plot original explanation (Row 1)
-            axes[orig_row, col].imshow(normalize_image(expl_vis_orig), cmap=Config.COLORMAP)
-            if mask_vis is not None:
-                axes[orig_row, col].set_title(f'{method}\nPAR={par_orig:.2f} RRA={rra_orig:.2f}', fontsize=12)
-            else:
-                axes[orig_row, col].set_title(f'{method}', fontsize=12)
-            axes[orig_row, col].axis('off')
-            
-            # Plot perturbed explanation (Row 2)
-            axes[pert_row, col].imshow(normalize_image(expl_vis_pert), cmap=Config.COLORMAP)
-            if mask_vis is not None:
-                axes[pert_row, col].set_title(f'{method} L2={sensitivity:.3f}\nPAR={par_pert:.2f} RRA={rra_pert:.2f}', fontsize=12)
-            else:
-                axes[pert_row, col].set_title(f'{method}\n(L2={sensitivity:.3f})', fontsize=12)
-            axes[pert_row, col].axis('off')
-    
-    plt.suptitle(f'Input Randomization: {model_name}\n(Showing how explanations change when input pixels are randomly shuffled)', 
-                 fontsize=16, fontweight='bold', y=1.02)
-    plt.tight_layout()
-    
-    plot_path = os.path.join(Config.PLOTS_DIR, f'sanity_input_randomization_{model_name}.png')
-    plt.savefig(plot_path, dpi=Config.DPI, bbox_inches='tight')
-    logger.info(f"Saved input randomization visualization to {plot_path}")
-    plt.close()
 
 
 # ============================================================================
@@ -3031,19 +2510,12 @@ def main(seed: str, models_filter: Optional[List[str]] = None):
 
             # --- SANITY CHECKS (Run only if enabled in Config) ---
             if Config.ENABLE_SANITY_CHECKS and model_name in ["ResNet18", "ResNet101"]:
-                # Grab aligned batch of images and corresponding masks by filename
-                _, transforms_test_for_sanity = get_transforms()
-                xb, mb, labels = get_aligned_image_mask_batch(test_dataset, transforms_test_for_sanity, num_samples=32)
-                xb = xb.to(device)
-                # mb stays on CPU for visualization
-                yb = model(xb).argmax(1)
+                # Grab small batch
+                xb, yb = next(iter(test_dataloader))
+                xb, yb = xb[:32].to(device), model(xb[:32].to(device)).argmax(1)
                 
                 p_res = layer_wise_relevance_randomization(model, xb, yb, explainer_wrapper)
                 i_res = input_randomization_test(model, xb, yb, explainer_wrapper)
-                
-                # Visualize sanity checks (4 examples each) with masks
-                visualize_layer_wise_randomization(model, xb, yb, explainer_wrapper, model_name, masks_batch=mb, num_examples=4)
-                visualize_input_randomization(model, xb, yb, explainer_wrapper, model_name, masks_batch=mb, num_examples=4)
                 
                 with open(f"{Config.RESULTS_DIR}/sanity_{model_name}.txt", "w") as f:
                     f.write(str(p_res) + "\n" + str(i_res))
@@ -3071,7 +2543,7 @@ def main(seed: str, models_filter: Optional[List[str]] = None):
             # Evaluate XAI methods against masks
             logger.info(f"Evaluating XAI methods for {model_name}...")
             df_xai_metrics, xai_results, correction_results = evaluate_xai_against_masks(
-                model, explanations_all, x_batch.cpu().numpy(), exp_preds, s_batch
+                model, explanations_all, x_batch.cpu().numpy(), exp_preds, s_batch, y_true=exp_labels,
             )
             # # --- EVALUATE METRICS ---
             # raw_scores = evaluate_metrics(model, expls, imgs, preds, masks)
@@ -3150,25 +2622,15 @@ def run_sanity_checks_only(seed: str, models_to_check: List[str] = None):
         logger.info(f"\nProcessing {model_name}...")
         model = load_model(model_path=model_path)
         
-        # Grab aligned batch of images and corresponding masks by filename
-        _, transforms_test_for_sanity = get_transforms()
-        xb, mb, labels = get_aligned_image_mask_batch(test_dataset, transforms_test_for_sanity, num_samples=32)
-        xb = xb.to(device)
-        # mb stays on CPU for visualization
-        yb = model(xb).argmax(1)
+        # Grab small batch
+        xb, yb = next(iter(test_dataloader))
+        xb, yb = xb[:32].to(device), model(xb[:32].to(device)).argmax(1)
         
         logger.info("Running layer-wise relevance randomization...")
         p_res = layer_wise_relevance_randomization(model, xb, yb, explainer_wrapper)
         
         logger.info("Running input randomization test...")
         i_res = input_randomization_test(model, xb, yb, explainer_wrapper)
-        
-        # Visualize sanity checks (4 examples each) with masks
-        logger.info("Creating layer-wise randomization visualization...")
-        visualize_layer_wise_randomization(model, xb, yb, explainer_wrapper, model_name, masks_batch=mb, num_examples=4)
-        
-        logger.info("Creating input randomization visualization...")
-        visualize_input_randomization(model, xb, yb, explainer_wrapper, model_name, masks_batch=mb, num_examples=4)
         
         output_file = f"{Config.RESULTS_DIR}/sanity_{model_name}.txt"
         with open(output_file, "w") as f:

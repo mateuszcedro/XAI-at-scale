@@ -4,7 +4,7 @@ TRAINING CONFIGURATION
 ================================================================================
 
 DATASET PARAMETERS:
-  - Train/Val/Test Split: 70% / 20% / 10%
+  - Train/Val/Test Split: 70% / 15% / 15%
   - Image Size: 224x224
   - Image Format: RGB (converted from grayscale)
   - Data Augmentation (Training):

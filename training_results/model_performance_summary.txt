@@ -1,0 +1,31 @@
+========================================================================================================================
+MODEL PERFORMANCE SUMMARY (Averaged over 3 Seeds)
+========================================================================================================================
+
+            Model Accuracy (Mean) Accuracy (STD) AUC (Mean) AUC (STD) Loss (Mean) Loss (STD) Train Time (s) Inference Time (s)
+ResNet50-ImageNet          0.8107         0.0068     0.8739    0.0062      0.4525     0.0103   944.56±92.94      3.0550±0.0821
+         CheXpert          0.7584         0.0082     0.8547    0.0108      0.4750     0.0032  2060.93±20.98      3.3492±0.0523
+      DenseNet169          0.7418         0.0616     0.7630    0.0539      0.5974     0.0513  838.95±376.92      3.6131±0.0221
+         ResNet18          0.7352         0.0321     0.7680    0.0513      0.5733     0.0517  534.26±266.18      2.7527±0.0567
+      DenseNet121          0.7222         0.0272     0.7626    0.0423      0.5955     0.0403  589.15±206.09      3.4421±0.0565
+      DenseNet201          0.7092         0.0841     0.7381    0.0708      0.5985     0.0664  914.58±542.93      3.8284±0.0547
+         ResNet50          0.7015         0.0112     0.7085    0.0331      0.6229     0.0201   530.07±68.84      3.0880±0.0626
+         ResNet34          0.6835         0.0221     0.7657    0.0209      0.5707     0.0249  493.03±107.36      2.8904±0.0292
+        ResNet101          0.6327         0.0776     0.6543    0.0040      0.6605     0.0096    251.11±0.98      3.3898±0.0384
+
+========================================================================================================================
+HYPERPARAMETERS USED
+========================================================================================================================
+
+
+========================================================================================================================
+NOTES:
+========================================================================================================================
+- All metrics are averaged across 3 random seeds
+- Standard deviations show variance across the 3 runs
+- Loss: Final validation loss at best model checkpoint
+- Training Time: Average time to train one model (seconds)
+- Inference Time: Average time to run inference on entire test set (seconds)
+- Models are sorted by accuracy (highest to lowest)
+- All metrics evaluated on the test set (10% of data)
+- Early stopping patience is for validation loss improvement (5 epochs without improvement stops training)
