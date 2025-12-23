@@ -1,0 +1,11 @@
+========================================================================================================================
+XAI OVERALL SUMMARY
+========================================================================================================================
+
+         XAI Method PositiveAttributionRatio_Mean PositiveAttributionRatio_Std PositiveAttributionRatio_Min PositiveAttributionRatio_Max  PositiveAttributionRatio_N RelevanceRankAccuracy_Mean RelevanceRankAccuracy_Std RelevanceRankAccuracy_Min RelevanceRankAccuracy_Max  RelevanceRankAccuracy_N
+ FeaturePermutation                        0.1952                       0.0389                       0.1249                       0.2811                          27                     0.2015                    0.0436                    0.1190                    0.2991                       27
+            GradCAM                        0.1623                       0.0279                       0.0852                       0.2092                          27                     0.1688                    0.0460                    0.0740                    0.2625                       27
+       GradientShap                        0.1444                       0.0366                       0.0859                       0.2338                          27                     0.1436                    0.0232                    0.0964                    0.1938                       27
+IntegratedGradients                        0.1472                       0.0371                       0.0874                       0.2378                          27                     0.1453                    0.0238                    0.0954                    0.1968                       27
+           Saliency                        0.1918                       0.0335                       0.1315                       0.2822                          27                     0.1807                    0.0235                    0.1289                    0.2326                       27
+

@@ -1,0 +1,74 @@
+{
+  "ResNet18": {
+    "0": {
+      "seed": 51,
+      "metrics": {
+        "accuracy": 0.91324200913242,
+        "precision": 0.8280254777070064,
+        "recall": 0.9219858156028369,
+        "f1": 0.87248322147651,
+        "auc_roc": 0.9762638202354514,
+        "inference_time": 1.4343113899230957,
+        "time_per_sample_ms": 3.2746835386372046,
+        "num_test_samples": 438
+      },
+      "training_time": 250.95219373703003,
+      "avg_epoch_time": 13.736172954241434,
+      "final_val_loss": 0.1543852507269808
+    }
+  },
+  "ResNet34": {
+    "0": {
+      "seed": 51,
+      "metrics": {
+        "accuracy": 0.8904109589041096,
+        "precision": 0.7888198757763976,
+        "recall": 0.900709219858156,
+        "f1": 0.8410596026490067,
+        "auc_roc": 0.9610287269861737,
+        "inference_time": 1.303316593170166,
+        "time_per_sample_ms": 2.9756086602058587,
+        "num_test_samples": 438
+      },
+      "training_time": 177.51892018318176,
+      "avg_epoch_time": 14.581101020177206,
+      "final_val_loss": 0.22032933362892695
+    }
+  },
+  "ResNet50": {
+    "0": {
+      "seed": 51,
+      "metrics": {
+        "accuracy": 0.9269406392694064,
+        "precision": 0.8865248226950354,
+        "recall": 0.8865248226950354,
+        "f1": 0.8865248226950354,
+        "auc_roc": 0.9708670630656446,
+        "inference_time": 1.5108072757720947,
+        "time_per_sample_ms": 3.449331679844965,
+        "num_test_samples": 438
+      },
+      "training_time": 358.3896884918213,
+      "avg_epoch_time": 16.047220544381574,
+      "final_val_loss": 0.1196883329456406
+    }
+  },
+  "ResNet101": {
+    "0": {
+      "seed": 51,
+      "metrics": {
+        "accuracy": 0.9315068493150684,
+        "precision": 0.8936170212765957,
+        "recall": 0.8936170212765957,
+        "f1": 0.8936170212765957,
+        "auc_roc": 0.9729445757814552,
+        "inference_time": 1.485217809677124,
+        "time_per_sample_ms": 3.3909082412719727,
+        "num_test_samples": 438
+      },
+      "training_time": 432.0219428539276,
+      "avg_epoch_time": 18.23204225042592,
+      "final_val_loss": 0.11485356198889869
+    }
+  }
+}

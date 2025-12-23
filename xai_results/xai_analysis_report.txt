@@ -1,0 +1,293 @@
+========================================================================================================================
+XAI RESULTS SUMMARY - ACROSS ALL SEEDS AND MODELS
+========================================================================================================================
+
+Number of seeds: 3
+Number of models: 9
+
+========================================================================================================================
+XAI METHODS EVALUATED
+========================================================================================================================
+
+1. Saliency: Gradient-based attribution method
+2. IntegratedGradients: Path integration-based attribution
+3. GradCAM: Class Activation Mapping
+4. GradientShap: Game theory-based attribution
+5. FeaturePermutation: Importance by permutation
+
+========================================================================================================================
+EVALUATION METRICS
+========================================================================================================================
+
+RelevanceRankAccuracy: How well the XAI method ranks relevant features
+  - Higher is better (range: 0-1)
+  - Measures if important features get high attribution scores
+
+RelevanceMassAccuracy: How much attribution is concentrated on relevant features
+  - Higher is better (range: 0-1)
+  - Measures if explanations focus on important regions
+
+========================================================================================================================
+SUMMARY BY MODEL
+========================================================================================================================
+
+
+CheXpert:
+--------------------------------------------------------------------------------
+
+  FeaturePermutation:
+    RelevanceRankAccuracy: 0.1842 ± 0.0025
+      Range: [0.1807, 0.1865]
+
+  GradCAM:
+    RelevanceRankAccuracy: 0.2159 ± 0.0070
+      Range: [0.2082, 0.2252]
+
+  GradientShap:
+    RelevanceRankAccuracy: 0.1663 ± 0.0038
+      Range: [0.1610, 0.1692]
+
+  IntegratedGradients:
+    RelevanceRankAccuracy: 0.1674 ± 0.0032
+      Range: [0.1630, 0.1706]
+
+  Saliency:
+    RelevanceRankAccuracy: 0.2073 ± 0.0034
+      Range: [0.2029, 0.2111]
+
+DenseNet121:
+--------------------------------------------------------------------------------
+
+  FeaturePermutation:
+    RelevanceRankAccuracy: 0.2704 ± 0.0389
+      Range: [0.2154, 0.2991]
+
+  GradCAM:
+    RelevanceRankAccuracy: 0.1607 ± 0.0777
+      Range: [0.0740, 0.2625]
+
+  GradientShap:
+    RelevanceRankAccuracy: 0.1178 ± 0.0085
+      Range: [0.1063, 0.1268]
+
+  IntegratedGradients:
+    RelevanceRankAccuracy: 0.1180 ± 0.0091
+      Range: [0.1055, 0.1271]
+
+  Saliency:
+    RelevanceRankAccuracy: 0.1585 ± 0.0171
+      Range: [0.1346, 0.1737]
+
+DenseNet169:
+--------------------------------------------------------------------------------
+
+  FeaturePermutation:
+    RelevanceRankAccuracy: 0.1876 ± 0.0374
+      Range: [0.1535, 0.2396]
+
+  GradCAM:
+    RelevanceRankAccuracy: 0.1516 ± 0.0282
+      Range: [0.1308, 0.1915]
+
+  GradientShap:
+    RelevanceRankAccuracy: 0.1238 ± 0.0104
+      Range: [0.1110, 0.1365]
+
+  IntegratedGradients:
+    RelevanceRankAccuracy: 0.1278 ± 0.0101
+      Range: [0.1167, 0.1412]
+
+  Saliency:
+    RelevanceRankAccuracy: 0.1690 ± 0.0192
+      Range: [0.1473, 0.1940]
+
+DenseNet201:
+--------------------------------------------------------------------------------
+
+  FeaturePermutation:
+    RelevanceRankAccuracy: 0.1944 ± 0.0599
+      Range: [0.1409, 0.2781]
+
+  GradCAM:
+    RelevanceRankAccuracy: 0.1804 ± 0.0130
+      Range: [0.1653, 0.1970]
+
+  GradientShap:
+    RelevanceRankAccuracy: 0.1182 ± 0.0205
+      Range: [0.0964, 0.1457]
+
+  IntegratedGradients:
+    RelevanceRankAccuracy: 0.1181 ± 0.0210
+      Range: [0.0954, 0.1460]
+
+  Saliency:
+    RelevanceRankAccuracy: 0.1589 ± 0.0248
+      Range: [0.1289, 0.1897]
+
+ResNet101:
+--------------------------------------------------------------------------------
+
+  FeaturePermutation:
+    RelevanceRankAccuracy: 0.1741 ± 0.0410
+      Range: [0.1190, 0.2172]
+
+  GradCAM:
+    RelevanceRankAccuracy: 0.1917 ± 0.0459
+      Range: [0.1268, 0.2259]
+
+  GradientShap:
+    RelevanceRankAccuracy: 0.1447 ± 0.0136
+      Range: [0.1254, 0.1547]
+
+  IntegratedGradients:
+    RelevanceRankAccuracy: 0.1491 ± 0.0186
+      Range: [0.1230, 0.1649]
+
+  Saliency:
+    RelevanceRankAccuracy: 0.1685 ± 0.0135
+      Range: [0.1538, 0.1863]
+
+ResNet18:
+--------------------------------------------------------------------------------
+
+  FeaturePermutation:
+    RelevanceRankAccuracy: 0.2027 ± 0.0220
+      Range: [0.1720, 0.2227]
+
+  GradCAM:
+    RelevanceRankAccuracy: 0.1287 ± 0.0462
+      Range: [0.0955, 0.1940]
+
+  GradientShap:
+    RelevanceRankAccuracy: 0.1692 ± 0.0202
+      Range: [0.1444, 0.1938]
+
+  IntegratedGradients:
+    RelevanceRankAccuracy: 0.1714 ± 0.0205
+      Range: [0.1466, 0.1968]
+
+  Saliency:
+    RelevanceRankAccuracy: 0.1953 ± 0.0155
+      Range: [0.1734, 0.2082]
+
+ResNet34:
+--------------------------------------------------------------------------------
+
+  FeaturePermutation:
+    RelevanceRankAccuracy: 0.2132 ± 0.0369
+      Range: [0.1757, 0.2634]
+
+  GradCAM:
+    RelevanceRankAccuracy: 0.1531 ± 0.0170
+      Range: [0.1368, 0.1766]
+
+  GradientShap:
+    RelevanceRankAccuracy: 0.1694 ± 0.0069
+      Range: [0.1629, 0.1790]
+
+  IntegratedGradients:
+    RelevanceRankAccuracy: 0.1698 ± 0.0084
+      Range: [0.1579, 0.1760]
+
+  Saliency:
+    RelevanceRankAccuracy: 0.2061 ± 0.0193
+      Range: [0.1871, 0.2326]
+
+ResNet50:
+--------------------------------------------------------------------------------
+
+  FeaturePermutation:
+    RelevanceRankAccuracy: 0.1762 ± 0.0034
+      Range: [0.1716, 0.1797]
+
+  GradCAM:
+    RelevanceRankAccuracy: 0.1479 ± 0.0340
+      Range: [0.1228, 0.1959]
+
+  GradientShap:
+    RelevanceRankAccuracy: 0.1402 ± 0.0012
+      Range: [0.1391, 0.1419]
+
+  IntegratedGradients:
+    RelevanceRankAccuracy: 0.1411 ± 0.0012
+      Range: [0.1397, 0.1427]
+
+  Saliency:
+    RelevanceRankAccuracy: 0.1839 ± 0.0044
+      Range: [0.1800, 0.1900]
+
+ResNet50-ImageNet:
+--------------------------------------------------------------------------------
+
+  FeaturePermutation:
+    RelevanceRankAccuracy: 0.2105 ± 0.0133
+      Range: [0.1924, 0.2239]
+
+  GradCAM:
+    RelevanceRankAccuracy: 0.1891 ± 0.0191
+      Range: [0.1630, 0.2082]
+
+  GradientShap:
+    RelevanceRankAccuracy: 0.1424 ± 0.0052
+      Range: [0.1367, 0.1494]
+
+  IntegratedGradients:
+    RelevanceRankAccuracy: 0.1450 ± 0.0052
+      Range: [0.1397, 0.1521]
+
+  Saliency:
+    RelevanceRankAccuracy: 0.1791 ± 0.0074
+      Range: [0.1736, 0.1895]
+
+========================================================================================================================
+OVERALL RANKINGS
+========================================================================================================================
+
+
+Average RelevanceRankAccuracy by XAI Method:
+--------------------------------------------------------------------------------
+  FeaturePermutation: 0.2015 ± 0.0277
+  Saliency: 0.1807 ± 0.0177
+  GradCAM: 0.1688 ± 0.0257
+  IntegratedGradients: 0.1453 ± 0.0200
+  GradientShap: 0.1436 ± 0.0199
+
+Average RelevanceMassAccuracy by XAI Method:
+--------------------------------------------------------------------------------
+
+========================================================================================================================
+TOP PERFORMING COMBINATIONS
+========================================================================================================================
+
+
+Top 10 Model-XAI Method Combinations (RelevanceRankAccuracy):
+--------------------------------------------------------------------------------
+ 1. DenseNet121          + FeaturePermutation  : 0.2704 ± 0.0389
+ 2. CheXpert             + GradCAM             : 0.2159 ± 0.0070
+ 3. ResNet34             + FeaturePermutation  : 0.2132 ± 0.0369
+ 4. ResNet50-ImageNet    + FeaturePermutation  : 0.2105 ± 0.0133
+ 5. CheXpert             + Saliency            : 0.2073 ± 0.0034
+ 6. ResNet34             + Saliency            : 0.2061 ± 0.0193
+ 7. ResNet18             + FeaturePermutation  : 0.2027 ± 0.0220
+ 8. ResNet18             + Saliency            : 0.1953 ± 0.0155
+ 9. DenseNet201          + FeaturePermutation  : 0.1944 ± 0.0599
+10. ResNet101            + GradCAM             : 0.1917 ± 0.0459
+
+Top 10 Model-XAI Method Combinations (RelevanceMassAccuracy):
+--------------------------------------------------------------------------------
+
+========================================================================================================================
+INTERPRETATION GUIDE
+========================================================================================================================
+
+- Higher RelevanceRankAccuracy indicates the XAI method correctly identifies
+  which features are important for the model's predictions
+
+- Higher RelevanceMassAccuracy indicates explanations are concentrated on
+  the most important regions of the input
+
+- Standard deviation shows consistency across seeds:
+  * Low std: Method is stable across different random initializations
+  * High std: Method may be sensitive to training variations
+
+========================================================================================================================

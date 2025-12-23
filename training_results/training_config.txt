@@ -1,0 +1,56 @@
+
+================================================================================
+TRAINING CONFIGURATION
+================================================================================
+
+DATASET PARAMETERS:
+  - Train/Val/Test Split: 70% / 15% / 15%
+  - Image Size: 224x224
+  - Image Format: RGB (converted from grayscale)
+  - Data Augmentation (Training):
+    * Random Horizontal Flip (p=0.5)
+    * Random Rotation (±15°)
+    * Color Jitter (brightness=0.2, contrast=0.2)
+    * Normalization: ImageNet mean/std
+
+TRAINING PARAMETERS:
+  - Number of Runs: 3
+  - Random Seeds:
+  - Number of Epochs: 50
+  - Batch Size: 32
+  - Learning Rate: 0.001
+  - Optimizer: Adam (betas=(0.9, 0.999), eps=1e-8)
+  - Loss Function: CrossEntropyLoss
+  - Learning Rate Scheduler: ReduceLROnPlateau
+    * Factor: 0.5
+    * Patience: 5
+    * Mode: min (on validation loss)
+  - Early Stopping Patience: 10 epochs
+
+MODELS TRAINED:
+  1. ResNet18 (from scratch)
+  2. ResNet34 (from scratch)
+  3. ResNet50 (from scratch)
+  4. ResNet101 (from scratch)
+  5. DenseNet121 (from scratch)
+  6. DenseNet169 (from scratch)
+  7. DenseNet201 (from scratch)
+  8. ResNet50-ImageNet (pretrained on ImageNet)
+  9. CheXpert (pretrained on medical images)
+
+EVALUATION METRICS:
+  - Accuracy
+  - Precision
+  - Recall
+  - F1-Score
+  - AUC-ROC
+  - Confusion Matrix
+
+OUTPUT FILES:
+  - aggregated_results.json: Mean ± Std metrics across all runs
+  - training_config.txt: This configuration file
+  - model_comparison_with_std.png: Comparison plot with error bars
+  - checkpoints/: Model weights for each seed
+  - plots/: Training curves and confusion matrices for each seed
+
+================================================================================
