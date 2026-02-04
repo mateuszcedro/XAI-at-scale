@@ -153,7 +153,7 @@ class ModelTrainer:
         self.history = defaultdict(list)
         self.best_val_loss = float('inf')
         self.patience_counter = 0
-        self.max_patience = 5
+        self.max_patience = 16  # Must be > scheduler patience (5) to allow LR reduction before early stopping
         
         logger.info(f"Initialized trainer for {model_name}")
         self._log_hyperparameters()
@@ -441,6 +441,7 @@ class ModelTrainer:
         
         self.training_time = total_training_time
         self.avg_epoch_time = avg_epoch_time
+        self.epochs_completed = len(epoch_times)
         
         logger.info(f"\nTraining completed for {self.model_name}")
         logger.info(f"  Total training time: {total_training_time/60:.2f} minutes ({total_training_time:.2f} seconds)")
@@ -1184,7 +1185,8 @@ def train_all_models(data_dir: str, output_dir: str = "./results", num_epochs: i
                     'history': dict(trainer.history),
                     'training_time': trainer.training_time,
                     'avg_epoch_time': trainer.avg_epoch_time,
-                    'final_val_loss': trainer.best_val_loss
+                    'final_val_loss': trainer.best_val_loss,
+                    'epochs_completed': trainer.epochs_completed
                 }
                 
                 logger.info(f"{model_name} - Accuracy: {test_metrics['accuracy']:.4f}, "
@@ -1253,7 +1255,8 @@ def _save_intermediate_results(all_results: Dict, output_dir: Path, run_id: int,
                 },
                 'training_time': float(data['training_time']),
                 'avg_epoch_time': float(data['avg_epoch_time']),
-                'final_val_loss': float(data.get('final_val_loss', 0.0))
+                'final_val_loss': float(data.get('final_val_loss', 0.0)),
+                'epochs_completed': int(data.get('epochs_completed', 0))
             }
     
     with open(checkpoint_file, 'w') as f:
@@ -1386,6 +1389,16 @@ def aggregate_results(all_results: Dict) -> Dict:
             'std': float(np.std(final_val_losses)),
             'values': final_val_losses
         }
+        
+        # Aggregate epochs completed
+        epochs_completed = [runs[run_id].get('epochs_completed', 0) for run_id in runs.keys()]
+        aggregated[model_name]['epochs_completed'] = {
+            'mean': float(np.mean(epochs_completed)),
+            'std': float(np.std(epochs_completed)),
+            'min': int(np.min(epochs_completed)),
+            'max': int(np.max(epochs_completed)),
+            'values': epochs_completed
+        }
     
     return aggregated
 
@@ -1431,7 +1444,7 @@ def save_aggregated_results(aggregated_results: Dict, output_dir: Path):
                            f"(min: {stats['min']:.4f}, max: {stats['max']:.4f})")
 
 
-def save_training_config(output_dir: Path, num_epochs: int, batch_size: int, learning_rate: float = 0.001, #TODO: make learning rate adjustable, etc
+def save_training_config(output_dir: Path, num_epochs: int, batch_size: int, learning_rate: float = 0.001,
                         num_runs: int = 3, seeds: List[int] = None):
     """Save training configuration to file"""
     config_path = output_dir / "training_config.txt"
@@ -1441,29 +1454,12 @@ def save_training_config(output_dir: Path, num_epochs: int, batch_size: int, lea
 TRAINING CONFIGURATION
 {'='*80}
 
-DATASET PARAMETERS:
-  - Train/Val/Test Split: 70% / 20% / 10%
-  - Image Size: 224x224
-  - Image Format: RGB (converted from grayscale)
-  - Data Augmentation (Training):
-    * Random Horizontal Flip (p=0.5)
-    * Random Rotation (±15°)
-    * Color Jitter (brightness=0.2, contrast=0.2)
-    * Normalization: ImageNet mean/std
-
 TRAINING PARAMETERS:
   - Number of Runs: {num_runs}
   - Random Seeds: {seeds}
   - Number of Epochs: {num_epochs}
   - Batch Size: {batch_size}
   - Learning Rate: {learning_rate}
-  - Optimizer: Adam (betas=(0.9, 0.999), eps=1e-8)
-  - Loss Function: CrossEntropyLoss
-  - Learning Rate Scheduler: ReduceLROnPlateau
-    * Factor: 0.5
-    * Patience: 5
-    * Mode: min (on validation loss)
-  - Early Stopping Patience: 5 epochs
 
 MODELS TRAINED:
   1. ResNet18 (from scratch)
@@ -1752,7 +1748,7 @@ if __name__ == "__main__":
     # Configuration
     DATA_DIR = args.data_dir or os.path.expanduser("~/data/medical_imaging/processed")
     OUTPUT_DIR = args.output_dir or ("./mock_results" if args.mock else "./training_results")
-    NUM_EPOCHS = args.epochs or (2 if args.mock else 50)
+    NUM_EPOCHS = args.epochs or (2 if args.mock else 100)
     BATCH_SIZE = args.batch_size or (4 if args.mock else 32)
     NUM_RUNS = args.num_runs or (1 if args.mock else 3)
     
