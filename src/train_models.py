@@ -7,6 +7,8 @@ Trains multiple deep learning architectures on medical imaging datasets:
 - DenseNets (121, 169, 201) - trained from scratch
 - CheXpert (pretrained on medical images)
 - ResNet50-ImageNet (pretrained on ImageNet)
+- ViT-Base-ImageNet (Vision Transformer pretrained on ImageNet)
+- ViT-Large-ImageNet (Vision Transformer pretrained on ImageNet)
 
 Features:
 - Train/Validation/Test split
@@ -48,6 +50,7 @@ from torchvision.models import ResNet50_Weights
 from PIL import Image
 from tqdm import tqdm
 import torchxrayvision as xrv
+from transformers import ViTForImageClassification, ViTConfig
 
 # Configure logging
 logging.basicConfig(
@@ -252,6 +255,96 @@ class ModelTrainer:
                     return out
             
             model = CheXpertBinary(original_features, original_classifier, self.num_classes)
+            return model
+        
+        # ViT-Base pretrained on ImageNet
+        elif model_name == "ViT-Base-ImageNet":
+            logger.info("Loading ViT-Base pretrained on ImageNet (google/vit-base-patch16-224)...")
+            model = ViTForImageClassification.from_pretrained(
+                "google/vit-base-patch16-224",
+                num_labels=self.num_classes,
+                ignore_mismatched_sizes=True
+            )
+            
+            # Freeze backbone, only train classifier
+            for name, param in model.named_parameters():
+                if "classifier" not in name:
+                    param.requires_grad = False
+            self.is_frozen = True
+            logger.info("Frozen ViT-Base backbone weights.")
+            
+            # Modify patch embedding to accept 1-channel grayscale input
+            original_patch_embed = model.vit.embeddings.patch_embeddings.projection
+            new_patch_embed = nn.Conv2d(
+                in_channels=1,
+                out_channels=original_patch_embed.out_channels,
+                kernel_size=original_patch_embed.kernel_size,
+                stride=original_patch_embed.stride,
+                padding=original_patch_embed.padding
+            )
+            # Initialize by averaging RGB weights
+            with torch.no_grad():
+                new_patch_embed.weight.data = original_patch_embed.weight.data.mean(dim=1, keepdim=True)
+                if original_patch_embed.bias is not None:
+                    new_patch_embed.bias.data = original_patch_embed.bias.data
+            model.vit.embeddings.patch_embeddings.projection = new_patch_embed
+            
+            # Create wrapper to match expected output format
+            class ViTBinaryWrapper(nn.Module):
+                def __init__(self, vit_model):
+                    super().__init__()
+                    self.vit = vit_model
+                
+                def forward(self, x):
+                    outputs = self.vit(x)
+                    return outputs.logits
+            
+            model = ViTBinaryWrapper(model)
+            return model
+        
+        # ViT-Large pretrained on ImageNet
+        elif model_name == "ViT-Large-ImageNet":
+            logger.info("Loading ViT-Large pretrained on ImageNet (google/vit-large-patch16-224)...")
+            model = ViTForImageClassification.from_pretrained(
+                "google/vit-large-patch16-224",
+                num_labels=self.num_classes,
+                ignore_mismatched_sizes=True
+            )
+            
+            # Freeze backbone, only train classifier
+            for name, param in model.named_parameters():
+                if "classifier" not in name:
+                    param.requires_grad = False
+            self.is_frozen = True
+            logger.info("Frozen ViT-Large backbone weights.")
+            
+            # Modify patch embedding to accept 1-channel grayscale input
+            original_patch_embed = model.vit.embeddings.patch_embeddings.projection
+            new_patch_embed = nn.Conv2d(
+                in_channels=1,
+                out_channels=original_patch_embed.out_channels,
+                kernel_size=original_patch_embed.kernel_size,
+                stride=original_patch_embed.stride,
+                padding=original_patch_embed.padding
+            )
+            # Initialize by averaging RGB weights
+            with torch.no_grad():
+                new_patch_embed.weight.data = original_patch_embed.weight.data.mean(dim=1, keepdim=True)
+                if original_patch_embed.bias is not None:
+                    new_patch_embed.bias.data = original_patch_embed.bias.data
+            model.vit.embeddings.patch_embeddings.projection = new_patch_embed
+            
+            # Create wrapper to match expected output format
+            class ViTBinaryWrapper(nn.Module):
+                def __init__(self, vit_model):
+                    super().__init__()
+                    self.vit = vit_model
+                
+                def forward(self, x):
+                    outputs = self.vit(x)
+                    return outputs.logits
+            
+            model = ViTBinaryWrapper(model)
             return model
         
         else:
@@ -1120,6 +1213,7 @@ def train_all_models(data_dir: str, output_dir: str = "./results", num_epochs: i
     
     # Model architectures to train
     models_to_train = [
+        "ViT-Base-ImageNet", "ViT-Large-ImageNet",
         "ResNet18", "ResNet34", "ResNet50", "ResNet101",
         "DenseNet121", "DenseNet169", "DenseNet201",
         "ResNet50-ImageNet",
@@ -1471,6 +1565,8 @@ MODELS TRAINED:
   7. DenseNet201 (from scratch)
   8. ResNet50-ImageNet (pretrained on ImageNet)
   9. CheXpert (pretrained on medical images)
+  10. ViT-Base-ImageNet (Vision Transformer pretrained on ImageNet)
+  11. ViT-Large-ImageNet (Vision Transformer pretrained on ImageNet)
 
 EVALUATION METRICS:
   - Accuracy
