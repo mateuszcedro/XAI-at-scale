@@ -48,7 +48,7 @@ def create_summary_table(results: Dict[str, Any]) -> pd.DataFrame:
 #     """Extract hyperparameters from training code."""
 #     hyperparams = {
 #         "Number of Seeds": "3",
-#         "Random Seeds": "",
+#         "Random Seeds":,
 #         "Epochs": "50",
 #         "Batch Size": "32",
 #         "Learning Rate": "0.001",

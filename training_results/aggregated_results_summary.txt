@@ -4,145 +4,145 @@ AGGREGATED RESULTS SUMMARY
 ================================================================================
 
 ResNet18:
-  accuracy: 0.9452 ± 0.0244
-  precision: 0.9040 ± 0.0594
-  recall: 0.9389 ± 0.0120
-  f1: 0.9204 ± 0.0363
-  auc_roc: 0.9828 ± 0.0050
+  accuracy: 0.7352 ± 0.0321
+  precision: 0.4328 ± 0.0379
+  recall: 0.6236 ± 0.0974
+  f1: 0.5077 ± 0.0483
+  auc_roc: 0.7680 ± 0.0513
   training_time:
-    - Mean: 5.70 min (341.84s)
-    - Std: 76.99s
-    - Total: 17.09 min (all runs)
-  avg_epoch_time: 13.69 ± 0.07 seconds
-  inference_time: 1.4140 ± 0.0517 seconds
-  time_per_sample_ms: 3.2284 ± 0.1179 ms
-  num_test_samples: 438
-  final_val_loss: 0.1443 ± 0.0152
+    - Mean: 8.90 min (534.26s)
+    - Std: 266.18s
+    - Total: 26.71 min (all runs)
+  avg_epoch_time: 29.00 ± 0.07 seconds
+  inference_time: 2.7527 ± 0.0567 seconds
+  time_per_sample_ms: 2.2825 ± 0.0470 ms
+  num_test_samples: 1206
+  final_val_loss: 0.5733 ± 0.0517
 
 ResNet34:
-  accuracy: 0.9110 ± 0.0168
-  precision: 0.8795 ± 0.0798
-  recall: 0.8686 ± 0.0804
-  f1: 0.8674 ± 0.0273
-  auc_roc: 0.9702 ± 0.0103
+  accuracy: 0.6835 ± 0.0221
+  precision: 0.3873 ± 0.0225
+  recall: 0.7392 ± 0.0137
+  f1: 0.5077 ± 0.0173
+  auc_roc: 0.7657 ± 0.0209
   training_time:
-    - Mean: 3.66 min (219.55s)
-    - Std: 68.60s
-    - Total: 10.98 min (all runs)
-  avg_epoch_time: 14.67 ± 0.07 seconds
-  inference_time: 1.3248 ± 0.0273 seconds
-  time_per_sample_ms: 3.0247 ± 0.0623 ms
-  num_test_samples: 438
-  final_val_loss: 0.2344 ± 0.0509
+    - Mean: 8.22 min (493.03s)
+    - Std: 107.36s
+    - Total: 24.65 min (all runs)
+  avg_epoch_time: 31.87 ± 0.13 seconds
+  inference_time: 2.8904 ± 0.0292 seconds
+  time_per_sample_ms: 2.3967 ± 0.0242 ms
+  num_test_samples: 1206
+  final_val_loss: 0.5707 ± 0.0249
 
 ResNet50:
-  accuracy: 0.9429 ± 0.0130
-  precision: 0.9105 ± 0.0173
-  recall: 0.9206 ± 0.0339
-  f1: 0.9153 ± 0.0227
-  auc_roc: 0.9791 ± 0.0092
+  accuracy: 0.7015 ± 0.0112
+  precision: 0.3809 ± 0.0084
+  recall: 0.5745 ± 0.0961
+  f1: 0.4556 ± 0.0372
+  auc_roc: 0.7085 ± 0.0331
   training_time:
-    - Mean: 7.01 min (420.56s)
-    - Std: 64.72s
-    - Total: 21.03 min (all runs)
-  avg_epoch_time: 16.09 ± 0.04 seconds
-  inference_time: 1.4238 ± 0.0616 seconds
-  time_per_sample_ms: 3.2506 ± 0.1408 ms
-  num_test_samples: 438
-  final_val_loss: 0.1333 ± 0.0344
+    - Mean: 8.83 min (530.07s)
+    - Std: 68.84s
+    - Total: 26.50 min (all runs)
+  avg_epoch_time: 35.88 ± 0.11 seconds
+  inference_time: 3.0880 ± 0.0626 seconds
+  time_per_sample_ms: 2.5605 ± 0.0519 ms
+  num_test_samples: 1206
+  final_val_loss: 0.6229 ± 0.0201
 
 ResNet101:
-  accuracy: 0.9155 ± 0.0259
-  precision: 0.8609 ± 0.0326
-  recall: 0.8968 ± 0.0452
-  f1: 0.8782 ± 0.0351
-  auc_roc: 0.9672 ± 0.0199
+  accuracy: 0.6327 ± 0.0776
+  precision: 0.3205 ± 0.0232
+  recall: 0.5501 ± 0.1656
+  f1: 0.3923 ± 0.0249
+  auc_roc: 0.6543 ± 0.0040
   training_time:
-    - Mean: 5.30 min (318.17s)
-    - Std: 121.47s
-    - Total: 15.91 min (all runs)
-  avg_epoch_time: 18.25 ± 0.02 seconds
-  inference_time: 1.5416 ± 0.0808 seconds
-  time_per_sample_ms: 3.5196 ± 0.1844 ms
-  num_test_samples: 438
-  final_val_loss: 0.1786 ± 0.0849
+    - Mean: 4.19 min (251.11s)
+    - Std: 0.98s
+    - Total: 12.56 min (all runs)
+  avg_epoch_time: 41.59 ± 0.16 seconds
+  inference_time: 3.3898 ± 0.0384 seconds
+  time_per_sample_ms: 2.8108 ± 0.0318 ms
+  num_test_samples: 1206
+  final_val_loss: 0.6605 ± 0.0096
 
 DenseNet121:
-  accuracy: 0.9323 ± 0.0057
-  precision: 0.8710 ± 0.0031
-  recall: 0.9382 ± 0.0320
-  f1: 0.9030 ± 0.0137
-  auc_roc: 0.9850 ± 0.0059
+  accuracy: 0.7222 ± 0.0272
+  precision: 0.4194 ± 0.0402
+  recall: 0.6605 ± 0.0797
+  f1: 0.5110 ± 0.0425
+  auc_roc: 0.7626 ± 0.0423
   training_time:
-    - Mean: 8.01 min (480.49s)
-    - Std: 34.72s
-    - Total: 24.02 min (all runs)
-  avg_epoch_time: 19.60 ± 0.05 seconds
-  inference_time: 1.5617 ± 0.0339 seconds
-  time_per_sample_ms: 3.5656 ± 0.0774 ms
-  num_test_samples: 438
-  final_val_loss: 0.1387 ± 0.0091
+    - Mean: 9.82 min (589.15s)
+    - Std: 206.09s
+    - Total: 29.46 min (all runs)
+  avg_epoch_time: 45.16 ± 0.08 seconds
+  inference_time: 3.4421 ± 0.0565 seconds
+  time_per_sample_ms: 2.8542 ± 0.0469 ms
+  num_test_samples: 1206
+  final_val_loss: 0.5955 ± 0.0403
 
 DenseNet169:
-  accuracy: 0.9026 ± 0.0254
-  precision: 0.8274 ± 0.0490
-  recall: 0.9013 ± 0.0342
-  f1: 0.8621 ± 0.0366
-  auc_roc: 0.9677 ± 0.0124
+  accuracy: 0.7418 ± 0.0616
+  precision: 0.4536 ± 0.0746
+  recall: 0.5780 ± 0.1099
+  f1: 0.4980 ± 0.0623
+  auc_roc: 0.7630 ± 0.0539
   training_time:
-    - Mean: 5.62 min (337.01s)
-    - Std: 169.74s
-    - Total: 16.85 min (all runs)
-  avg_epoch_time: 22.69 ± 0.06 seconds
-  inference_time: 1.6661 ± 0.1023 seconds
-  time_per_sample_ms: 3.8038 ± 0.2335 ms
-  num_test_samples: 438
-  final_val_loss: 0.2162 ± 0.0577
+    - Mean: 13.98 min (838.95s)
+    - Std: 376.92s
+    - Total: 41.95 min (all runs)
+  avg_epoch_time: 53.29 ± 0.02 seconds
+  inference_time: 3.6131 ± 0.0221 seconds
+  time_per_sample_ms: 2.9959 ± 0.0183 ms
+  num_test_samples: 1206
+  final_val_loss: 0.5974 ± 0.0513
 
 DenseNet201:
-  accuracy: 0.9361 ± 0.0229
-  precision: 0.8767 ± 0.0639
-  recall: 0.9483 ± 0.0242
-  f1: 0.9095 ± 0.0326
-  auc_roc: 0.9859 ± 0.0099
+  accuracy: 0.7092 ± 0.0841
+  precision: 0.4097 ± 0.0845
+  recall: 0.5838 ± 0.1529
+  f1: 0.4695 ± 0.0943
+  auc_roc: 0.7381 ± 0.0708
   training_time:
-    - Mean: 12.22 min (733.05s)
-    - Std: 113.84s
-    - Total: 36.65 min (all runs)
-  avg_epoch_time: 24.66 ± 0.04 seconds
-  inference_time: 1.7970 ± 0.0965 seconds
-  time_per_sample_ms: 4.1028 ± 0.2202 ms
-  num_test_samples: 438
-  final_val_loss: 0.1253 ± 0.0193
+    - Mean: 15.24 min (914.58s)
+    - Std: 542.93s
+    - Total: 45.73 min (all runs)
+  avg_epoch_time: 59.37 ± 0.13 seconds
+  inference_time: 3.8284 ± 0.0547 seconds
+  time_per_sample_ms: 3.1745 ± 0.0454 ms
+  num_test_samples: 1206
+  final_val_loss: 0.5985 ± 0.0664
 
 ResNet50-ImageNet:
-  accuracy: 0.9802 ± 0.0039
-  precision: 0.9775 ± 0.0057
-  recall: 0.9641 ± 0.0079
-  f1: 0.9707 ± 0.0050
-  auc_roc: 0.9986 ± 0.0003
+  accuracy: 0.8107 ± 0.0068
+  precision: 0.5503 ± 0.0166
+  recall: 0.7729 ± 0.0077
+  f1: 0.6427 ± 0.0107
+  auc_roc: 0.8739 ± 0.0062
   training_time:
-    - Mean: 13.26 min (795.48s)
-    - Std: 21.45s
-    - Total: 39.77 min (all runs)
-  avg_epoch_time: 15.96 ± 0.13 seconds
-  inference_time: 1.4411 ± 0.0593 seconds
-  time_per_sample_ms: 3.2901 ± 0.1355 ms
-  num_test_samples: 438
-  final_val_loss: 0.0337 ± 0.0086
+    - Mean: 15.74 min (944.56s)
+    - Std: 92.94s
+    - Total: 47.23 min (all runs)
+  avg_epoch_time: 35.08 ± 0.09 seconds
+  inference_time: 3.0550 ± 0.0821 seconds
+  time_per_sample_ms: 2.5332 ± 0.0681 ms
+  num_test_samples: 1206
+  final_val_loss: 0.4525 ± 0.0103
 
 CheXpert:
-  accuracy: 0.9300 ± 0.0140
-  precision: 0.8583 ± 0.0309
-  recall: 0.9500 ± 0.0148
-  f1: 0.9016 ± 0.0208
-  auc_roc: 0.9833 ± 0.0026
+  accuracy: 0.7584 ± 0.0082
+  precision: 0.4723 ± 0.0142
+  recall: 0.8131 ± 0.0161
+  f1: 0.5973 ± 0.0107
+  auc_roc: 0.8547 ± 0.0108
   training_time:
-    - Mean: 14.50 min (869.75s)
-    - Std: 18.47s
-    - Total: 43.49 min (all runs)
-  avg_epoch_time: 17.18 ± 0.34 seconds
-  inference_time: 1.6649 ± 0.0091 seconds
-  time_per_sample_ms: 3.8012 ± 0.0207 ms
-  num_test_samples: 438
-  final_val_loss: 0.1712 ± 0.0167
+    - Mean: 34.35 min (2060.93s)
+    - Std: 20.98s
+    - Total: 103.05 min (all runs)
+  avg_epoch_time: 40.99 ± 0.42 seconds
+  inference_time: 3.3492 ± 0.0523 seconds
+  time_per_sample_ms: 2.7771 ± 0.0434 ms
+  num_test_samples: 1206
+  final_val_loss: 0.4750 ± 0.0032

@@ -1,43 +1,52 @@
+
+==============================================================================================================
+STATISTICAL CORRECTION SUMMARY (All Seeds)
+==============================================================================================================
+
 Group                     | Metric - Method                                    | Raw p    | Corr p   | Sig
 --------------------------------------------------------------------------------------------------------------
-A_ResNet_Scale            | RelevanceRankAccuracy - Saliency                   | 0.1473   | 0.3929   |
-A_ResNet_Scale            | RelevanceRankAccuracy - IntegratedGradients        | 0.1290   | 0.3686   |
-A_ResNet_Scale            | RelevanceRankAccuracy - GradientShap               | 0.0752   | 0.3321   |
-A_ResNet_Scale            | RelevanceRankAccuracy - GradCAM                    | 0.3191   | 0.6078   |
-A_ResNet_Scale            | RelevanceRankAccuracy - FeaturePermutation         | 0.5777   | 0.7703   |
-A_ResNet_Scale            | PositiveAttributionRatio - Saliency                | 0.1079   | 0.3321   |
-A_ResNet_Scale            | PositiveAttributionRatio - IntegratedGradients     | 0.0656   | 0.3321   |
-A_ResNet_Scale            | PositiveAttributionRatio - GradientShap            | 0.0719   | 0.3321   |
-A_ResNet_Scale            | PositiveAttributionRatio - GradCAM                 | 0.5360   | 0.7703   |
-A_ResNet_Scale            | PositiveAttributionRatio - FeaturePermutation      | 0.5062   | 0.7703   |
-B_DenseNet_Scale          | RelevanceRankAccuracy - Saliency                   | 0.8371   | 0.8976   |
-B_DenseNet_Scale          | RelevanceRankAccuracy - IntegratedGradients        | 0.7326   | 0.8140   |
-B_DenseNet_Scale          | RelevanceRankAccuracy - GradientShap               | 0.8752   | 0.8976   |
-B_DenseNet_Scale          | RelevanceRankAccuracy - GradCAM                    | 0.5611   | 0.7703   |
-B_DenseNet_Scale          | RelevanceRankAccuracy - FeaturePermutation         | 0.1931   | 0.4000   |
-B_DenseNet_Scale          | PositiveAttributionRatio - Saliency                | 0.7326   | 0.8140   |
-B_DenseNet_Scale          | PositiveAttributionRatio - IntegratedGradients     | 0.5611   | 0.7703   |
-B_DenseNet_Scale          | PositiveAttributionRatio - GradientShap            | 0.8752   | 0.8976   |
-B_DenseNet_Scale          | PositiveAttributionRatio - GradCAM                 | 0.7326   | 0.8140   |
-B_DenseNet_Scale          | PositiveAttributionRatio - FeaturePermutation      | 0.1931   | 0.4000   |
-C_Pretraining_ResNet      | RelevanceRankAccuracy - Saliency                   | 0.4000   | 0.6400   |
-C_Pretraining_ResNet      | RelevanceRankAccuracy - IntegratedGradients        | 0.4000   | 0.6400   |
-C_Pretraining_ResNet      | RelevanceRankAccuracy - GradientShap               | 1.0000   | 1.0000   |
-C_Pretraining_ResNet      | RelevanceRankAccuracy - GradCAM                    | 0.2000   | 0.4000   |
-C_Pretraining_ResNet      | RelevanceRankAccuracy - FeaturePermutation         | 0.1000   | 0.3321   |
-C_Pretraining_ResNet      | PositiveAttributionRatio - Saliency                | 0.1000   | 0.3321   |
-C_Pretraining_ResNet      | PositiveAttributionRatio - IntegratedGradients     | 0.2000   | 0.4000   |
-C_Pretraining_ResNet      | PositiveAttributionRatio - GradientShap            | 0.4000   | 0.6400   |
-C_Pretraining_ResNet      | PositiveAttributionRatio - GradCAM                 | 0.2000   | 0.4000   |
-C_Pretraining_ResNet      | PositiveAttributionRatio - FeaturePermutation      | 0.4000   | 0.6400   |
-D_Pretraining_DenseNet    | RelevanceRankAccuracy - Saliency                   | 0.1000   | 0.3321   |
-D_Pretraining_DenseNet    | RelevanceRankAccuracy - IntegratedGradients        | 0.1000   | 0.3321   |
-D_Pretraining_DenseNet    | RelevanceRankAccuracy - GradientShap               | 0.1000   | 0.3321   |
-D_Pretraining_DenseNet    | RelevanceRankAccuracy - GradCAM                    | 0.7000   | 0.8140   |
-D_Pretraining_DenseNet    | RelevanceRankAccuracy - FeaturePermutation         | 0.1000   | 0.3321   |
-D_Pretraining_DenseNet    | PositiveAttributionRatio - Saliency                | 0.7000   | 0.8140   |
-D_Pretraining_DenseNet    | PositiveAttributionRatio - IntegratedGradients     | 0.1000   | 0.3321   |
-D_Pretraining_DenseNet    | PositiveAttributionRatio - GradientShap            | 0.1000   | 0.3321   |
-D_Pretraining_DenseNet    | PositiveAttributionRatio - GradCAM                 | 0.7000   | 0.8140   |
-D_Pretraining_DenseNet    | PositiveAttributionRatio - FeaturePermutation      | 0.1000   | 0.3321   |
+A_ResNet_Scale            | RelevanceRankAccuracy - Saliency                   | 0.4684   | 0.8373   | 
+A_ResNet_Scale            | RelevanceRankAccuracy - IntegratedGradients        | 0.5160   | 0.8373   | 
+A_ResNet_Scale            | RelevanceRankAccuracy - GradientShap               | 0.1718   | 0.8177   | 
+A_ResNet_Scale            | RelevanceRankAccuracy - GradCAM                    | 0.2044   | 0.8177   | 
+A_ResNet_Scale            | RelevanceRankAccuracy - FeaturePermutation         | 0.5462   | 0.8373   | 
+A_ResNet_Scale            | PositiveAttributionRatio - Saliency                | 0.3466   | 0.8373   | 
+A_ResNet_Scale            | PositiveAttributionRatio - IntegratedGradients     | 0.3061   | 0.8373   | 
+A_ResNet_Scale            | PositiveAttributionRatio - GradientShap            | 0.1540   | 0.8177   | 
+A_ResNet_Scale            | PositiveAttributionRatio - GradCAM                 | 0.3191   | 0.8373   | 
+A_ResNet_Scale            | PositiveAttributionRatio - FeaturePermutation      | 0.9104   | 1.0000   | 
+B_DenseNet_Scale          | RelevanceRankAccuracy - Saliency                   | 0.5611   | 0.8373   | 
+B_DenseNet_Scale          | RelevanceRankAccuracy - IntegratedGradients        | 0.6703   | 0.8373   | 
+B_DenseNet_Scale          | RelevanceRankAccuracy - GradientShap               | 0.7326   | 0.8373   | 
+B_DenseNet_Scale          | RelevanceRankAccuracy - GradCAM                    | 0.0608   | 0.8177   | 
+B_DenseNet_Scale          | RelevanceRankAccuracy - FeaturePermutation         | 0.5611   | 0.8373   | 
+B_DenseNet_Scale          | PositiveAttributionRatio - Saliency                | 0.7326   | 0.8373   | 
+B_DenseNet_Scale          | PositiveAttributionRatio - IntegratedGradients     | 0.6703   | 0.8373   | 
+B_DenseNet_Scale          | PositiveAttributionRatio - GradientShap            | 0.7326   | 0.8373   | 
+B_DenseNet_Scale          | PositiveAttributionRatio - GradCAM                 | 0.4911   | 0.8373   | 
+B_DenseNet_Scale          | PositiveAttributionRatio - FeaturePermutation      | 0.4298   | 0.8373   | 
+C_Pretraining_ResNet      | RelevanceRankAccuracy - Saliency                   | 0.4000   | 0.8373   | 
+C_Pretraining_ResNet      | RelevanceRankAccuracy - IntegratedGradients        | 0.7000   | 0.8373   | 
+C_Pretraining_ResNet      | RelevanceRankAccuracy - GradientShap               | 1.0000   | 1.0000   | 
+C_Pretraining_ResNet      | RelevanceRankAccuracy - GradCAM                    | 0.2000   | 0.8177   | 
+C_Pretraining_ResNet      | RelevanceRankAccuracy - FeaturePermutation         | 0.7000   | 0.8373   | 
+C_Pretraining_ResNet      | PositiveAttributionRatio - Saliency                | 0.4000   | 0.8373   | 
+C_Pretraining_ResNet      | PositiveAttributionRatio - IntegratedGradients     | 1.0000   | 1.0000   | 
+C_Pretraining_ResNet      | PositiveAttributionRatio - GradientShap            | 1.0000   | 1.0000   | 
+C_Pretraining_ResNet      | PositiveAttributionRatio - GradCAM                 | 0.7000   | 0.8373   | 
+C_Pretraining_ResNet      | PositiveAttributionRatio - FeaturePermutation      | 0.2000   | 0.8177   | 
+D_Pretraining_DenseNet    | RelevanceRankAccuracy - Saliency                   | 0.2000   | 0.8177   | 
+D_Pretraining_DenseNet    | RelevanceRankAccuracy - IntegratedGradients        | 0.7000   | 0.8373   | 
+D_Pretraining_DenseNet    | RelevanceRankAccuracy - GradientShap               | 1.0000   | 1.0000   | 
+D_Pretraining_DenseNet    | RelevanceRankAccuracy - GradCAM                    | 0.4000   | 0.8373   | 
+D_Pretraining_DenseNet    | RelevanceRankAccuracy - FeaturePermutation         | 0.2000   | 0.8177   | 
+D_Pretraining_DenseNet    | PositiveAttributionRatio - Saliency                | 0.2000   | 0.8177   | 
+D_Pretraining_DenseNet    | PositiveAttributionRatio - IntegratedGradients     | 0.7000   | 0.8373   | 
+D_Pretraining_DenseNet    | PositiveAttributionRatio - GradientShap            | 0.4000   | 0.8373   | 
+D_Pretraining_DenseNet    | PositiveAttributionRatio - GradCAM                 | 0.7000   | 0.8373   | 
+D_Pretraining_DenseNet    | PositiveAttributionRatio - FeaturePermutation      | 0.1000   | 0.8177   | 
 --------------------------------------------------------------------------------------------------------------
+
+Total tests: 40
+Significant after correction: 0
+Correction method: Benjamini-Hochberg FDR

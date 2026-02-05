@@ -1,6 +1,6 @@
 import subprocess
 
-DATASET = "covid_qu_ex"  # Options: "covid_qu_ex", "pet_processed", "chest_x_pneumo"
+DATASET = "chest_x_pneumo"  # Options: "covid_qu_ex", "pet", "chest_x_pneumo"
 
 
 def main():

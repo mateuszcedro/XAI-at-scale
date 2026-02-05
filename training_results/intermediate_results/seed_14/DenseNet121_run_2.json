@@ -3,386 +3,386 @@
     "0": {
       "seed": 51,
       "metrics": {
-        "accuracy": 0.91324200913242,
-        "precision": 0.8280254777070064,
-        "recall": 0.9219858156028369,
-        "f1": 0.87248322147651,
-        "auc_roc": 0.9762638202354514,
-        "inference_time": 1.4343113899230957,
-        "time_per_sample_ms": 3.2746835386372046,
-        "num_test_samples": 438
+        "accuracy": 0.7587064676616916,
+        "precision": 0.447098976109215,
+        "recall": 0.5038461538461538,
+        "f1": 0.47377938517179025,
+        "auc_roc": 0.751618149292568,
+        "inference_time": 2.6738195419311523,
+        "time_per_sample_ms": 2.2170974642878543,
+        "num_test_samples": 1206
       },
-      "training_time": 250.95219373703003,
-      "avg_epoch_time": 13.736172954241434,
-      "final_val_loss": 0.1543852507269808
+      "training_time": 406.1911277770996,
+      "avg_epoch_time": 28.89773006098611,
+      "final_val_loss": 0.5955372907613453
     },
     "1": {
       "seed": 92,
       "metrics": {
-        "accuracy": 0.9726027397260274,
-        "precision": 0.9731543624161074,
-        "recall": 0.9477124183006536,
-        "f1": 0.9602649006622517,
-        "auc_roc": 0.9883040935672515,
-        "inference_time": 1.3431241512298584,
-        "time_per_sample_ms": 3.066493495958581,
-        "num_test_samples": 438
+        "accuracy": 0.6898839137645107,
+        "precision": 0.38095238095238093,
+        "recall": 0.6245353159851301,
+        "f1": 0.4732394366197183,
+        "auc_roc": 0.714940905285793,
+        "inference_time": 2.804603099822998,
+        "time_per_sample_ms": 2.3255415421417895,
+        "num_test_samples": 1206
       },
-      "training_time": 439.2118284702301,
-      "avg_epoch_time": 13.588530197739601,
-      "final_val_loss": 0.12288543196128947
+      "training_time": 291.7419147491455,
+      "avg_epoch_time": 29.056417560577394,
+      "final_val_loss": 0.6223704799225456
     },
     "2": {
       "seed": 14,
       "metrics": {
-        "accuracy": 0.9497716894977168,
-        "precision": 0.910828025477707,
-        "recall": 0.9470198675496688,
-        "f1": 0.9285714285714285,
-        "auc_roc": 0.9839628954473083,
-        "inference_time": 1.4646761417388916,
-        "time_per_sample_ms": 3.3440094560248665,
-        "num_test_samples": 438
+        "accuracy": 0.7570480928689884,
+        "precision": 0.47044917257683216,
+        "recall": 0.7425373134328358,
+        "f1": 0.5759768451519537,
+        "auc_roc": 0.8373404830856379,
+        "inference_time": 2.779815435409546,
+        "time_per_sample_ms": 2.3049879232251627,
+        "num_test_samples": 1206
       },
-      "training_time": 335.36566376686096,
-      "avg_epoch_time": 13.742414792378744,
-      "final_val_loss": 0.15571253094822168
+      "training_time": 904.8550193309784,
+      "avg_epoch_time": 29.048721244258264,
+      "final_val_loss": 0.5018532589862221
     }
   },
   "ResNet34": {
     "0": {
       "seed": 51,
       "metrics": {
-        "accuracy": 0.8904109589041096,
-        "precision": 0.7888198757763976,
-        "recall": 0.900709219858156,
-        "f1": 0.8410596026490067,
-        "auc_roc": 0.9610287269861737,
-        "inference_time": 1.303316593170166,
-        "time_per_sample_ms": 2.9756086602058587,
-        "num_test_samples": 438
+        "accuracy": 0.6550580431177446,
+        "precision": 0.35818181818181816,
+        "recall": 0.7576923076923077,
+        "f1": 0.4864197530864197,
+        "auc_roc": 0.7497967149129939,
+        "inference_time": 2.9317450523376465,
+        "time_per_sample_ms": 2.4309660467144667,
+        "num_test_samples": 1206
       },
-      "training_time": 177.51892018318176,
-      "avg_epoch_time": 14.581101020177206,
-      "final_val_loss": 0.22032933362892695
+      "training_time": 415.174533367157,
+      "avg_epoch_time": 31.676514295431282,
+      "final_val_loss": 0.5883962900230759
     },
     "1": {
       "seed": 92,
       "metrics": {
-        "accuracy": 0.910958904109589,
-        "precision": 0.9830508474576272,
-        "recall": 0.7581699346405228,
-        "f1": 0.8560885608856089,
-        "auc_roc": 0.9650728127508313,
-        "inference_time": 1.3633055686950684,
-        "time_per_sample_ms": 3.1125697915412522,
-        "num_test_samples": 438
+        "accuracy": 0.6865671641791045,
+        "precision": 0.3907815631262525,
+        "recall": 0.724907063197026,
+        "f1": 0.5078125,
+        "auc_roc": 0.7521513332513401,
+        "inference_time": 2.8684544563293457,
+        "time_per_sample_ms": 2.3784862821968042,
+        "num_test_samples": 1206
       },
-      "training_time": 164.84572315216064,
-      "avg_epoch_time": 14.680508656935258,
-      "final_val_loss": 0.3024832143315247
+      "training_time": 419.0576682090759,
+      "avg_epoch_time": 31.958188185325035,
+      "final_val_loss": 0.5881769998293174
     },
     "2": {
       "seed": 14,
       "metrics": {
-        "accuracy": 0.9315068493150684,
-        "precision": 0.8666666666666667,
-        "recall": 0.9470198675496688,
-        "f1": 0.9050632911392406,
-        "auc_roc": 0.984562844682373,
-        "inference_time": 1.3078596591949463,
-        "time_per_sample_ms": 2.9859809570660873,
-        "num_test_samples": 438
+        "accuracy": 0.7089552238805971,
+        "precision": 0.4129979035639413,
+        "recall": 0.7350746268656716,
+        "f1": 0.5288590604026846,
+        "auc_roc": 0.7952574547306113,
+        "inference_time": 2.8711252212524414,
+        "time_per_sample_ms": 2.3807008468096527,
+        "num_test_samples": 1206
       },
-      "training_time": 316.28772926330566,
-      "avg_epoch_time": 14.748084465662638,
-      "final_val_loss": 0.18025465016918524
+      "training_time": 644.8446605205536,
+      "avg_epoch_time": 31.964722633361816,
+      "final_val_loss": 0.5354109645674103
     }
   },
   "ResNet50": {
     "0": {
       "seed": 51,
       "metrics": {
-        "accuracy": 0.9269406392694064,
-        "precision": 0.8865248226950354,
-        "recall": 0.8865248226950354,
-        "f1": 0.8865248226950354,
-        "auc_roc": 0.9708670630656446,
-        "inference_time": 1.5108072757720947,
-        "time_per_sample_ms": 3.449331679844965,
-        "num_test_samples": 438
+        "accuracy": 0.7155887230514096,
+        "precision": 0.36908517350157727,
+        "recall": 0.45,
+        "f1": 0.4055459272097054,
+        "auc_roc": 0.6654537323141974,
+        "inference_time": 3.0027549266815186,
+        "time_per_sample_ms": 2.4898465395369143,
+        "num_test_samples": 1206
       },
-      "training_time": 358.3896884918213,
-      "avg_epoch_time": 16.047220544381574,
-      "final_val_loss": 0.1196883329456406
+      "training_time": 432.7656259536743,
+      "avg_epoch_time": 35.79426189263662,
+      "final_val_loss": 0.6457663452938983
     },
     "1": {
       "seed": 92,
       "metrics": {
-        "accuracy": 0.9429223744292238,
-        "precision": 0.9266666666666666,
-        "recall": 0.9084967320261438,
-        "f1": 0.9174917491749175,
-        "auc_roc": 0.9746130030959752,
-        "inference_time": 1.3761088848114014,
-        "time_per_sample_ms": 3.1418011068753455,
-        "num_test_samples": 438
+        "accuracy": 0.6882255389718076,
+        "precision": 0.3873684210526316,
+        "recall": 0.6840148698884758,
+        "f1": 0.4946236559139785,
+        "auc_roc": 0.7460375397237882,
+        "inference_time": 3.151488780975342,
+        "time_per_sample_ms": 2.613174776928144,
+        "num_test_samples": 1206
       },
-      "training_time": 393.4867420196533,
-      "avg_epoch_time": 16.085976858933765,
-      "final_val_loss": 0.18046550678887538
+      "training_time": 581.2177448272705,
+      "avg_epoch_time": 36.042122945189476,
+      "final_val_loss": 0.596813755600076
     },
     "2": {
       "seed": 14,
       "metrics": {
-        "accuracy": 0.958904109589041,
-        "precision": 0.9182389937106918,
-        "recall": 0.9668874172185431,
-        "f1": 0.9419354838709677,
-        "auc_roc": 0.9919699102383644,
-        "inference_time": 1.3843371868133545,
-        "time_per_sample_ms": 3.160587184505376,
-        "num_test_samples": 438
+        "accuracy": 0.7006633499170812,
+        "precision": 0.3863080684596577,
+        "recall": 0.5895522388059702,
+        "f1": 0.4667651403249631,
+        "auc_roc": 0.714130573147058,
+        "inference_time": 3.1096112728118896,
+        "time_per_sample_ms": 2.578450474968399,
+        "num_test_samples": 1206
       },
-      "training_time": 509.8158504962921,
-      "avg_epoch_time": 16.144295277134066,
-      "final_val_loss": 0.09962620825639792
+      "training_time": 576.2351272106171,
+      "avg_epoch_time": 35.818185120821,
+      "final_val_loss": 0.6261363547099265
     }
   },
   "ResNet101": {
     "0": {
       "seed": 51,
       "metrics": {
-        "accuracy": 0.9315068493150684,
-        "precision": 0.8936170212765957,
-        "recall": 0.8936170212765957,
-        "f1": 0.8936170212765957,
-        "auc_roc": 0.9729445757814552,
-        "inference_time": 1.485217809677124,
-        "time_per_sample_ms": 3.3909082412719727,
-        "num_test_samples": 438
+        "accuracy": 0.7122719734660033,
+        "precision": 0.3462897526501767,
+        "recall": 0.3769230769230769,
+        "f1": 0.36095764272559855,
+        "auc_roc": 0.6487111725483818,
+        "inference_time": 3.4081315994262695,
+        "time_per_sample_ms": 2.8259797673517992,
+        "num_test_samples": 1206
       },
-      "training_time": 432.0219428539276,
-      "avg_epoch_time": 18.23204225042592,
-      "final_val_loss": 0.11485356198889869
+      "training_time": 249.72500443458557,
+      "avg_epoch_time": 41.36574403444926,
+      "final_val_loss": 0.6487210894885816
     },
     "1": {
       "seed": 92,
       "metrics": {
-        "accuracy": 0.8789954337899544,
-        "precision": 0.8164556962025317,
-        "recall": 0.8431372549019608,
-        "f1": 0.8295819935691318,
-        "auc_roc": 0.9405343423919276,
-        "inference_time": 1.4837210178375244,
-        "time_per_sample_ms": 3.38749090830485,
-        "num_test_samples": 438
+        "accuracy": 0.527363184079602,
+        "precision": 0.2900976290097629,
+        "recall": 0.7732342007434945,
+        "f1": 0.4219066937119675,
+        "auc_roc": 0.656338151103141,
+        "inference_time": 3.3364152908325195,
+        "time_per_sample_ms": 2.7665135081530012,
+        "num_test_samples": 1206
       },
-      "training_time": 149.83869552612305,
-      "avg_epoch_time": 18.28333416581154,
-      "final_val_loss": 0.2986282003777368
+      "training_time": 251.87472581863403,
+      "avg_epoch_time": 41.72143550713857,
+      "final_val_loss": 0.660704011979856
     },
     "2": {
       "seed": 14,
       "metrics": {
-        "accuracy": 0.9360730593607306,
-        "precision": 0.8727272727272727,
-        "recall": 0.9536423841059603,
-        "f1": 0.9113924050632912,
-        "auc_roc": 0.9882317650044996,
-        "inference_time": 1.6557908058166504,
-        "time_per_sample_ms": 3.7803443055174664,
-        "num_test_samples": 438
+        "accuracy": 0.6583747927031509,
+        "precision": 0.32524271844660196,
+        "recall": 0.5,
+        "f1": 0.3941176470588235,
+        "auc_roc": 0.6579853928650988,
+        "inference_time": 3.4249846935272217,
+        "time_per_sample_ms": 2.839954140569836,
+        "num_test_samples": 1206
       },
-      "training_time": 372.6577322483063,
-      "avg_epoch_time": 18.234424579143525,
-      "final_val_loss": 0.12224736277546201
+      "training_time": 251.72258162498474,
+      "avg_epoch_time": 41.69567251205444,
+      "final_val_loss": 0.6722004543009558
     }
   },
   "DenseNet121": {
     "0": {
       "seed": 51,
       "metrics": {
-        "accuracy": 0.9246575342465754,
-        "precision": 0.875,
-        "recall": 0.8936170212765957,
-        "f1": 0.8842105263157894,
-        "auc_roc": 0.9766458915395085,
-        "inference_time": 1.568361759185791,
-        "time_per_sample_ms": 3.580734610013222,
-        "num_test_samples": 438
+        "accuracy": 0.6873963515754561,
+        "precision": 0.3642691415313225,
+        "recall": 0.6038461538461538,
+        "f1": 0.4544138929088278,
+        "auc_roc": 0.7049886160351276,
+        "inference_time": 3.3856165409088135,
+        "time_per_sample_ms": 2.807310564601006,
+        "num_test_samples": 1206
       },
-      "training_time": 432.8779249191284,
-      "avg_epoch_time": 19.527610193599354,
-      "final_val_loss": 0.13828370281096017
+      "training_time": 316.6612844467163,
+      "avg_epoch_time": 45.07215230805533,
+      "final_val_loss": 0.6486489086558944
     },
     "1": {
       "seed": 92,
       "metrics": {
-        "accuracy": 0.9383561643835616,
-        "precision": 0.8705882352941177,
-        "recall": 0.9673202614379085,
-        "f1": 0.9164086687306501,
-        "auc_roc": 0.9894048847609219,
-        "inference_time": 1.5173051357269287,
-        "time_per_sample_ms": 3.464166976545499,
-        "num_test_samples": 438
+        "accuracy": 0.7255389718076285,
+        "precision": 0.4351464435146444,
+        "recall": 0.7732342007434945,
+        "f1": 0.5568942436412316,
+        "auc_roc": 0.8052592113563417,
+        "inference_time": 3.4214558601379395,
+        "time_per_sample_ms": 2.8370280763996183,
+        "num_test_samples": 1206
       },
-      "training_time": 514.6641845703125,
-      "avg_epoch_time": 19.643826264601486,
-      "final_val_loss": 0.12770778885377304
+      "training_time": 814.9537580013275,
+      "avg_epoch_time": 45.15297528107961,
+      "final_val_loss": 0.551063649748501
     },
     "2": {
       "seed": 14,
       "metrics": {
-        "accuracy": 0.9337899543378996,
-        "precision": 0.8674698795180723,
-        "recall": 0.9536423841059603,
-        "f1": 0.9085173501577286,
-        "auc_roc": 0.9890624639453585,
-        "inference_time": 1.5995686054229736,
-        "time_per_sample_ms": 3.651983117404049,
-        "num_test_samples": 438
+        "accuracy": 0.753731343283582,
+        "precision": 0.45892351274787535,
+        "recall": 0.6044776119402985,
+        "f1": 0.5217391304347826,
+        "auc_roc": 0.7776151226808389,
+        "inference_time": 3.519364833831787,
+        "time_per_sample_ms": 2.9182129633762743,
+        "num_test_samples": 1206
       },
-      "training_time": 493.9393980503082,
-      "avg_epoch_time": 19.61446844100952,
-      "final_val_loss": 0.15007156492876156
+      "training_time": 635.848194360733,
+      "avg_epoch_time": 45.26010630811964,
+      "final_val_loss": 0.5867206207231471
     }
   },
   "DenseNet169": {
     "0": {
       "seed": 51,
       "metrics": {
-        "accuracy": 0.8881278538812786,
-        "precision": 0.7771084337349398,
-        "recall": 0.9148936170212766,
-        "f1": 0.8403908794788274,
-        "auc_roc": 0.9616495928552666,
-        "inference_time": 1.6011364459991455,
-        "time_per_sample_ms": 3.6555626620985056,
-        "num_test_samples": 438
+        "accuracy": 0.7728026533996684,
+        "precision": 0.4700854700854701,
+        "recall": 0.4230769230769231,
+        "f1": 0.4453441295546559,
+        "auc_roc": 0.7649170596845016,
+        "inference_time": 3.6412174701690674,
+        "time_per_sample_ms": 3.0192516336393593,
+        "num_test_samples": 1206
       },
-      "training_time": 252.09293365478516,
-      "avg_epoch_time": 22.614330638538707,
-      "final_val_loss": 0.18963339791766234
+      "training_time": 749.1679863929749,
+      "avg_epoch_time": 53.25832804611751,
+      "final_val_loss": 0.6009578281327298
     },
     "1": {
       "seed": 92,
       "metrics": {
-        "accuracy": 0.9383561643835616,
-        "precision": 0.89375,
-        "recall": 0.934640522875817,
-        "f1": 0.9137380191693291,
-        "auc_roc": 0.9849558536865038,
-        "inference_time": 1.5866165161132812,
-        "time_per_sample_ms": 3.6224121372449343,
-        "num_test_samples": 438
+        "accuracy": 0.6558872305140961,
+        "precision": 0.3551587301587302,
+        "recall": 0.6654275092936803,
+        "f1": 0.463130659767141,
+        "auc_roc": 0.6959806072532364,
+        "inference_time": 3.6106252670288086,
+        "time_per_sample_ms": 2.9938849643688297,
+        "num_test_samples": 1206
       },
-      "training_time": 573.9068455696106,
-      "avg_epoch_time": 22.689052562713623,
-      "final_val_loss": 0.1626897927905832
+      "training_time": 428.8005278110504,
+      "avg_epoch_time": 53.301381677389145,
+      "final_val_loss": 0.6583047771924421
     }
   },
   "DenseNet201": {
     "0": {
       "seed": 51,
       "metrics": {
-        "accuracy": 0.9041095890410958,
-        "precision": 0.7964071856287425,
-        "recall": 0.9432624113475178,
-        "f1": 0.8636363636363636,
-        "auc_roc": 0.9718700002387946,
-        "inference_time": 1.6694045066833496,
-        "time_per_sample_ms": 3.811425814345547,
-        "num_test_samples": 438
+        "accuracy": 0.7504145936981758,
+        "precision": 0.4127659574468085,
+        "recall": 0.3730769230769231,
+        "f1": 0.3919191919191919,
+        "auc_roc": 0.7125182956578306,
+        "inference_time": 3.9049508571624756,
+        "time_per_sample_ms": 3.237936034131406,
+        "num_test_samples": 1206
       },
-      "training_time": 572.8319463729858,
-      "avg_epoch_time": 24.604634181312893,
-      "final_val_loss": 0.15252771055591957
+      "training_time": 654.5187630653381,
+      "avg_epoch_time": 59.19745553623546,
+      "final_val_loss": 0.6299369911614218
     },
     "1": {
       "seed": 92,
       "metrics": {
-        "accuracy": 0.95662100456621,
-        "precision": 0.9527027027027027,
-        "recall": 0.9215686274509803,
-        "f1": 0.9368770764119602,
-        "auc_roc": 0.9920421969957574,
-        "inference_time": 1.8190674781799316,
-        "time_per_sample_ms": 4.153122096301214,
-        "num_test_samples": 438
+        "accuracy": 0.5920398009950248,
+        "precision": 0.30472854640980734,
+        "recall": 0.6468401486988847,
+        "f1": 0.41428571428571426,
+        "auc_roc": 0.667165239056865,
+        "inference_time": 3.8002865314483643,
+        "time_per_sample_ms": 3.151149694401629,
+        "num_test_samples": 1206
       },
-      "training_time": 826.8269686698914,
-      "avg_epoch_time": 24.70337650270173,
-      "final_val_loss": 0.11341051770640272
+      "training_time": 418.96420788764954,
+      "avg_epoch_time": 59.52065992355347,
+      "final_val_loss": 0.6592908603580374
     }
   },
   "ResNet50-ImageNet": {
     "0": {
       "seed": 51,
       "metrics": {
-        "accuracy": 0.9840182648401826,
-        "precision": 0.9855072463768116,
-        "recall": 0.9645390070921985,
-        "f1": 0.974910394265233,
-        "auc_roc": 0.9990209422833537,
-        "inference_time": 1.4135737419128418,
-        "time_per_sample_ms": 3.2273373103032914,
-        "num_test_samples": 438
+        "accuracy": 0.8043117744610282,
+        "precision": 0.5319148936170213,
+        "recall": 0.7692307692307693,
+        "f1": 0.6289308176100629,
+        "auc_roc": 0.8656326231907627,
+        "inference_time": 2.9631640911102295,
+        "time_per_sample_ms": 2.4570183176701734,
+        "num_test_samples": 1206
       },
-      "training_time": 814.301762342453,
-      "avg_epoch_time": 15.89667555809021,
-      "final_val_loss": 0.02452543862455059
+      "training_time": 814.2616608142853,
+      "avg_epoch_time": 35.04150099339692,
+      "final_val_loss": 0.4382286708998053
     },
     "1": {
       "seed": 92,
       "metrics": {
-        "accuracy": 0.9748858447488584,
-        "precision": 0.9733333333333334,
-        "recall": 0.954248366013072,
-        "f1": 0.9636963696369638,
-        "auc_roc": 0.9981653480105492,
-        "inference_time": 1.5234715938568115,
-        "time_per_sample_ms": 3.478245648074912,
-        "num_test_samples": 438
+        "accuracy": 0.8200663349917081,
+        "precision": 0.5722222222222222,
+        "recall": 0.7657992565055762,
+        "f1": 0.6550079491255961,
+        "auc_roc": 0.8806441502382436,
+        "inference_time": 3.1624488830566406,
+        "time_per_sample_ms": 2.622262755436684,
+        "num_test_samples": 1206
       },
-      "training_time": 765.4567763805389,
-      "avg_epoch_time": 16.144514902778294,
-      "final_val_loss": 0.03138846303876822
+      "training_time": 1024.6612372398376,
+      "avg_epoch_time": 35.006406249671144,
+      "final_val_loss": 0.4620374719563283
     }
   },
   "CheXpert": {
     "0": {
       "seed": 51,
       "metrics": {
-        "accuracy": 0.9200913242009132,
-        "precision": 0.8397435897435898,
-        "recall": 0.9290780141843972,
-        "f1": 0.8821548821548821,
-        "auc_roc": 0.9802039305585405,
-        "inference_time": 1.6771728992462158,
-        "time_per_sample_ms": 3.82916187042515,
-        "num_test_samples": 438
+        "accuracy": 0.7470978441127695,
+        "precision": 0.45222929936305734,
+        "recall": 0.8192307692307692,
+        "f1": 0.5827633378932969,
+        "auc_roc": 0.8419011221336802,
+        "inference_time": 3.2757983207702637,
+        "time_per_sample_ms": 2.716250680572358,
+        "num_test_samples": 1206
       },
-      "training_time": 892.5523011684418,
-      "avg_epoch_time": 17.594716544151307,
-      "final_val_loss": 0.147695791109332
+      "training_time": 2051.2951521873474,
+      "avg_epoch_time": 40.77203155994415,
+      "final_val_loss": 0.4720454255217
     },
     "1": {
       "seed": 92,
       "metrics": {
-        "accuracy": 0.9497716894977168,
-        "precision": 0.901840490797546,
-        "recall": 0.9607843137254902,
-        "f1": 0.9303797468354431,
-        "auc_roc": 0.9865841073271414,
-        "inference_time": 1.6554770469665527,
-        "time_per_sample_ms": 3.779627961110851,
-        "num_test_samples": 438
+        "accuracy": 0.7620232172470979,
+        "precision": 0.48060344827586204,
+        "recall": 0.828996282527881,
+        "f1": 0.6084583901773534,
+        "auc_roc": 0.8683610193094309,
+        "inference_time": 3.3783349990844727,
+        "time_per_sample_ms": 2.801272801894256,
+        "num_test_samples": 1206
       },
-      "training_time": 869.3754389286041,
-      "avg_epoch_time": 17.180433287620545,
-      "final_val_loss": 0.18059890185083663
+      "training_time": 2041.4521825313568,
+      "avg_epoch_time": 40.614971127510074,
+      "final_val_loss": 0.4794853682580747
     }
   }
 }

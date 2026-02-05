@@ -75,9 +75,9 @@ class Config:
     """Configuration parameters for XAI analysis."""
 
     # Dataset configuration
-    DATASET = "covid_qu_ex"
-    # DATASET = "chest_x_pneumo"
-    # DATASET = "pet"
+    # DATASET = "covid_qu_ex"
+    # DATASET = "pet_processed"
+    DATASET = "chest_x_pneumo"
 
     # Adjust class names based on dataset
     if DATASET == "covid_qu_ex":
@@ -85,22 +85,29 @@ class Config:
         CLASS_0_NAME_MASKS = "infection_masks"
         CLASS_1_NAME = "Normal"
         CLASS_1_NAME_MASKS = "lung_masks"
-    elif DATASET == "pet":
+        MASK_CLASS_LABEL = None  # Both classes have masks
+        MASK_CLASS_NAME = None
+    elif DATASET == "pet_processed":
         CLASS_0_NAME = "cat"
         CLASS_0_NAME_MASKS = "masks"
         CLASS_1_NAME = "dog" 
         CLASS_1_NAME_MASKS = "masks"
+        MASK_CLASS_LABEL = None  # Both classes have masks
+        MASK_CLASS_NAME = None
     elif DATASET == "chest_x_pneumo":
         CLASS_0_NAME = "no_pneumo"
-        # CLASS_0_NAME_MASKS = "masks"
+        CLASS_0_NAME_MASKS = "masks"  # Empty - no masks for healthy class
         CLASS_1_NAME = "pneumo"
         CLASS_1_NAME_MASKS = "masks"
+        # Only class 1 (pneumo) has masks - set this for XAI evaluation
+        MASK_CLASS_LABEL = 1  # Label of the class with masks
+        MASK_CLASS_NAME = CLASS_1_NAME
     else:
         print(f"Unknown DATASET: {DATASET}. Please configure class names accordingly.")
 
     # Flag for Sanity Checks
-    # Set to True ONLY when running on the Pet dataset (or your chosen validation set)
-    if DATASET == "pet":
+    # Set to True ONLY when running on the pet_processed dataset (or your chosen validation set)
+    if DATASET == "pet_processed":
         ENABLE_SANITY_CHECKS = True
     else:
         ENABLE_SANITY_CHECKS = False
@@ -204,23 +211,31 @@ def load_test_data(transforms_test, seed: int = 42):
     logger.info(f"Class names: {class_names}")
     
     # Load masks with matching structure
+    # For datasets where only one class has masks (e.g., chest_x_pneumo), we load only those
     class MaskDataset(torch.utils.data.Dataset):
-        def __init__(self, class_0_mask_dir, class_1_mask_dir, transforms=None):
+        def __init__(self, class_0_mask_dir, class_1_mask_dir, transforms=None, single_class_label=None):
             self.transforms = transforms
             self.masks = []
             self.labels = []
+            self.image_names = []  # Store image names for matching
             
-            # Load class_0 masks (label 0)
-            class_0_mask_files = sorted([f for f in os.listdir(class_0_mask_dir) if f.endswith(('.png', '.jpg', '.jpeg'))])
-            for f in class_0_mask_files:
-                self.masks.append(os.path.join(class_0_mask_dir, f))
-                self.labels.append(0)
+            # Load class_0 masks (label 0) - skip if single_class_label is set and != 0
+            if single_class_label is None or single_class_label == 0:
+                if os.path.exists(class_0_mask_dir):
+                    class_0_mask_files = sorted([f for f in os.listdir(class_0_mask_dir) if f.endswith(('.png', '.jpg', '.jpeg'))])
+                    for f in class_0_mask_files:
+                        self.masks.append(os.path.join(class_0_mask_dir, f))
+                        self.labels.append(0)
+                        self.image_names.append(f)
             
-            # Load class_1 masks (label 1)
-            class_1_mask_files = sorted([f for f in os.listdir(class_1_mask_dir) if f.endswith(('.png', '.jpg', '.jpeg'))])
-            for f in class_1_mask_files:
-                self.masks.append(os.path.join(class_1_mask_dir, f))
-                self.labels.append(1)
+            # Load class_1 masks (label 1) - skip if single_class_label is set and != 1
+            if single_class_label is None or single_class_label == 1:
+                if os.path.exists(class_1_mask_dir):
+                    class_1_mask_files = sorted([f for f in os.listdir(class_1_mask_dir) if f.endswith(('.png', '.jpg', '.jpeg'))])
+                    for f in class_1_mask_files:
+                        self.masks.append(os.path.join(class_1_mask_dir, f))
+                        self.labels.append(1)
+                        self.image_names.append(f)
         
         def __len__(self):
             return len(self.masks)
@@ -238,14 +253,18 @@ def load_test_data(transforms_test, seed: int = 42):
     mask_dataset = MaskDataset(
         f"{test_root}/{Config.CLASS_0_NAME}/{Config.CLASS_0_NAME_MASKS}",
         f"{test_root}/{Config.CLASS_1_NAME}/{Config.CLASS_1_NAME_MASKS}",
-        transforms_test
+        transforms_test,
+        single_class_label=Config.MASK_CLASS_LABEL
     )
     mask_dataloader = torch.utils.data.DataLoader(
         mask_dataset, batch_size=Config.BATCH_SIZE, shuffle=False, num_workers=4
     )
     
     logger.info(f"Mask set size: {len(mask_dataset)}")
-    logger.info(f"Masks loaded from both class_0 and class_1 classes")
+    if Config.MASK_CLASS_LABEL is not None:
+        logger.info(f"Masks loaded from class {Config.MASK_CLASS_LABEL} ({Config.MASK_CLASS_NAME}) only")
+    else:
+        logger.info(f"Masks loaded from both classes")
     
     return test_dataset, test_loader, mask_dataset, mask_dataloader
 
@@ -1373,25 +1392,57 @@ def generate_explanations_full_test_set(model, test_dataloader, mask_dataloader,
     all_mask_data = torch.cat(all_mask_data, dim=0)
     all_mask_labels = torch.cat(all_mask_labels, dim=0)
     
-    # Select balanced samples: 100 from each class
-    class_0_indices = np.where(all_input_labels.numpy() == 0)[0]
-    class_1_indices = np.where(all_input_labels.numpy() == 1)[0]
-    
-    logger.info(f"Available samples: {len(class_0_indices)} class 0, {len(class_1_indices)} class 1")
-    
-    # Randomly select num_per_class from each
-    selected_class_0 = np.random.choice(class_0_indices, min(num_per_class, len(class_0_indices)), replace=False)
-    selected_class_1 = np.random.choice(class_1_indices, min(num_per_class, len(class_1_indices)), replace=False)
-    
-    selected_indices = np.concatenate([selected_class_0, selected_class_1])
-    np.random.shuffle(selected_indices)
-    
-    logger.info(f"Selected {len(selected_class_0)} class 0 and {len(selected_class_1)} class 1 samples")
-    
-    # Get selected data and corresponding masks
-    selected_inputs = all_inputs[selected_indices]
-    selected_labels = all_input_labels[selected_indices]
-    selected_masks = all_mask_data[selected_indices]
+    # Select samples - if only one class has masks, use only that class
+    if Config.MASK_CLASS_LABEL is not None:
+        # Only select from the class that has masks
+        mask_class_indices = np.where(all_input_labels.numpy() == Config.MASK_CLASS_LABEL)[0]
+        logger.info(f"Only class {Config.MASK_CLASS_LABEL} ({Config.MASK_CLASS_NAME}) has masks")
+        logger.info(f"Available samples with masks: {len(mask_class_indices)}")
+        
+        # Select up to num_per_class * 2 samples from the mask class (to maintain similar sample size)
+        num_to_select = min(num_per_class * 2, len(mask_class_indices))
+        selected_indices = np.random.choice(mask_class_indices, num_to_select, replace=False)
+        np.random.shuffle(selected_indices)
+        
+        logger.info(f"Selected {num_to_select} samples from class {Config.MASK_CLASS_LABEL}")
+        
+        # For masks, we need to match by position within the class
+        # Since mask dataset only contains masks for this class, indices are 0 to len(masks)-1
+        # We need to map image indices to mask indices
+        # Image indices within class = selected_indices - min(mask_class_indices) won't work
+        # Instead, find position of each selected index within the class
+        class_positions = np.searchsorted(np.sort(mask_class_indices), selected_indices)
+        # But since we're selecting randomly, we need a different approach
+        # Use the mask indices directly (0 to num_masks-1) and match with images
+        
+        # Get the sorted indices of this class in the original dataset
+        all_class_indices_sorted = np.sort(mask_class_indices)
+        # Map selected indices to their position within the class
+        selected_positions = np.array([np.where(all_class_indices_sorted == idx)[0][0] for idx in selected_indices])
+        
+        selected_inputs = all_inputs[selected_indices]
+        selected_labels = all_input_labels[selected_indices]
+        selected_masks = all_mask_data[selected_positions]  # Use positions within mask dataset
+    else:
+        # Both classes have masks - use balanced sampling
+        class_0_indices = np.where(all_input_labels.numpy() == 0)[0]
+        class_1_indices = np.where(all_input_labels.numpy() == 1)[0]
+        
+        logger.info(f"Available samples: {len(class_0_indices)} class 0, {len(class_1_indices)} class 1")
+        
+        # Randomly select num_per_class from each
+        selected_class_0 = np.random.choice(class_0_indices, min(num_per_class, len(class_0_indices)), replace=False)
+        selected_class_1 = np.random.choice(class_1_indices, min(num_per_class, len(class_1_indices)), replace=False)
+        
+        selected_indices = np.concatenate([selected_class_0, selected_class_1])
+        np.random.shuffle(selected_indices)
+        
+        logger.info(f"Selected {len(selected_class_0)} class 0 and {len(selected_class_1)} class 1 samples")
+        
+        # For balanced datasets, masks and images should align by index
+        selected_inputs = all_inputs[selected_indices]
+        selected_labels = all_input_labels[selected_indices]
+        selected_masks = all_mask_data[selected_indices]
     
     # Process selected samples in batches
     num_batches = int(np.ceil(len(selected_inputs) / Config.BATCH_SIZE))
@@ -1489,7 +1540,7 @@ def generate_explanations_full_test_set(model, test_dataloader, mask_dataloader,
     return explanations_all, all_labels, all_preds, xai_timing
 
 
-def evaluate_xai_against_masks(model, explanations_all, x_batch, y_pred, s_batch, device_to_use=device):
+def evaluate_xai_against_masks(model, explanations_all, x_batch, y_pred, s_batch, device_to_use=device, y_true=None):
     """Evaluate XAI methods against ground truth masks using Relevance metrics.
     
     Args:
@@ -1499,6 +1550,7 @@ def evaluate_xai_against_masks(model, explanations_all, x_batch, y_pred, s_batch
         y_pred: Predictions (aligned with explanations)
         s_batch: Ground truth masks (aligned with explanations)
         device_to_use: Device to use for computation
+        y_true: True labels (optional). If provided, only evaluates on class 1 (pneumothorax with GT masks)
     """
     logger.info("Evaluating XAI methods against ground truth masks...")
     
@@ -1509,6 +1561,30 @@ def evaluate_xai_against_masks(model, explanations_all, x_batch, y_pred, s_batch
     x_batch = x_batch[:num_samples]
     y_pred = y_pred[:num_samples]
     s_batch = s_batch[:num_samples]
+
+    # Filter to only class 1 (pneumothorax with ground truth masks) if y_true is provided
+    if y_true is not None:
+        y_true = y_true[:num_samples]
+        class_1_mask = y_true == 1
+        num_class_1 = np.sum(class_1_mask)
+
+        if num_class_1 > 0:
+            logger.info(
+                f"Filtering to class 1 (pneumothorax with GT masks): {num_class_1}/{num_samples} samples"
+            )
+            x_batch = x_batch[class_1_mask]
+            y_pred = y_pred[class_1_mask]
+            s_batch = s_batch[class_1_mask]
+
+            # Filter all explanations
+            for method in explanations_all.keys():
+                explanations_all[method] = explanations_all[method][class_1_mask]
+
+            num_samples = num_class_1
+        else:
+            logger.warning("No class 1 samples found!")
+    else:
+        logger.warning("Evaluating on samples form both classes (no filtering applied)")
     
     # Verify shapes
     logger.info(f"x_batch shape: {x_batch.shape}")
@@ -2006,12 +2082,28 @@ def layer_wise_relevance_randomization(model, x_batch, y_batch, explainer_wrappe
                 method=method,
             )
             
-            # Compute correlation degradation (higher degradation = better)
-            correlation = np.corrcoef(
-                original_expl.flatten(),
-                perturbed_expl.flatten()
-            )[0, 1]
-            degradation = 1 - np.abs(correlation)  # Higher = more degradation (good)
+           # Check for zero variance (would cause NaN in correlation)
+            orig_std = np.std(original_expl.flatten())
+            pert_std = np.std(perturbed_expl.flatten())
+            
+            if orig_std == 0 or pert_std == 0:
+                # Zero variance means the method produced constant output
+                # This indicates complete method failure with corrupted model = maximum degradation
+                logger.warning(f"    Layer {layer_idx+1} ({param_name}): Zero variance detected (orig_std={orig_std:.6f}, pert_std={pert_std:.6f})")
+                correlation = 0.0  # No correlation possible
+                degradation = 1.0  # Maximum degradation (method completely broke)
+            else:
+                correlation = np.corrcoef(
+                    original_expl.flatten(),
+                    perturbed_expl.flatten()
+                )[0, 1]
+                
+                if np.isnan(correlation):
+                    logger.warning(f"    Layer {layer_idx+1} ({param_name}): NaN correlation despite non-zero std")
+                    degradation = 1.0
+                else:
+                    degradation = 1 - np.abs(correlation)  # Higher = more degradation (good)
+            
             degradation_scores.append(degradation)
             
             logger.info(f"    Layer {layer_idx+1} ({param_name}): degradation={degradation:.4f}, correlation={correlation:.4f}")
@@ -2056,7 +2148,7 @@ def input_randomization_test(model, x_batch, y_batch, explainer_wrapper_func, nu
         y_batch = y_batch.cpu().numpy()
     
     results = {}
-    batch_size = min(len(x_batch), 10)  # Test on first 10 samples
+    batch_size = min(len(x_batch), 10)  # Test on first 10 samples 
     x_test = x_batch[:batch_size]
     y_test = y_batch[:batch_size]
     
@@ -2451,7 +2543,7 @@ def main(seed: str, models_filter: Optional[List[str]] = None):
             # Evaluate XAI methods against masks
             logger.info(f"Evaluating XAI methods for {model_name}...")
             df_xai_metrics, xai_results, correction_results = evaluate_xai_against_masks(
-                model, explanations_all, x_batch.cpu().numpy(), exp_preds, s_batch
+                model, explanations_all, x_batch.cpu().numpy(), exp_preds, s_batch, y_true=exp_labels,
             )
             # # --- EVALUATE METRICS ---
             # raw_scores = evaluate_metrics(model, expls, imgs, preds, masks)
@@ -2493,6 +2585,84 @@ def main(seed: str, models_filter: Optional[List[str]] = None):
     return all_model_results
 
 
+def run_sanity_checks_only(seed: str, models_to_check: List[str] = None):
+    """Run only sanity checks without full XAI analysis.
+    
+    Args:
+        seed: Seed directory name (e.g., "seed_51")
+        models_to_check: List of model names to check. Defaults to ["ResNet18", "ResNet101"]
+    """
+    if models_to_check is None:
+        models_to_check = ["ResNet18", "ResNet101"]
+    
+    Config.set_seed(seed)
+    numeric_seed = int(seed.split('_')[1])
+    set_seed(numeric_seed)
+    setup_directories()
+    
+    logger.info("="*80)
+    logger.info(f"Running SANITY CHECKS ONLY ({seed})")
+    logger.info(f"Models to check: {models_to_check}")
+    logger.info("="*80)
+    
+    # Load data
+    _, transforms_test = get_transforms()
+    test_dataset, test_dataloader, mask_dataset, mask_dataloader = load_test_data(transforms_test, seed=numeric_seed)
+    
+    checkpoint_dir = Config.CHECKPOINT_DIR
+    
+    for model_name in models_to_check:
+        model_file = f"{model_name}_best.pth"
+        model_path = os.path.join(checkpoint_dir, model_file)
+        
+        if not os.path.exists(model_path):
+            logger.warning(f"Model not found: {model_path}")
+            continue
+        
+        logger.info(f"\nProcessing {model_name}...")
+        model = load_model(model_path=model_path)
+        
+        # Grab small batch
+        xb, yb = next(iter(test_dataloader))
+        xb, yb = xb[:32].to(device), model(xb[:32].to(device)).argmax(1)
+        
+        logger.info("Running layer-wise relevance randomization...")
+        p_res = layer_wise_relevance_randomization(model, xb, yb, explainer_wrapper)
+        
+        logger.info("Running input randomization test...")
+        i_res = input_randomization_test(model, xb, yb, explainer_wrapper)
+        
+        output_file = f"{Config.RESULTS_DIR}/sanity_{model_name}.txt"
+        with open(output_file, "w") as f:
+            f.write("=" * 80 + "\n")
+            f.write(f"SANITY CHECK RESULTS FOR {model_name}\n")
+            f.write("=" * 80 + "\n\n")
+            f.write("LAYER-WISE RELEVANCE RANDOMIZATION:\n")
+            f.write("-" * 40 + "\n")
+            for method, results in p_res.items():
+                f.write(f"\n{method}:\n")
+                f.write(f"  Mean degradation: {results['mean_degradation']:.4f} ± {results['std_degradation']:.4f}\n")
+                f.write(f"  η² (effect size): {results['eta_squared']:.4f}\n")
+            f.write("\n" + "=" * 80 + "\n")
+            f.write("INPUT RANDOMIZATION TEST:\n")
+            f.write("-" * 40 + "\n")
+            for method, results in i_res.items():
+                f.write(f"\n{method}:\n")
+                f.write(f"  Mean sensitivity: {results['mean_sensitivity']:.6f} ± {results['std_sensitivity']:.6f}\n")
+                f.write(f"  η² (effect size): {results['eta_squared']:.4f}\n")
+                f.write(f"  Cliff's delta: {results['cliffs_delta']:.4f}\n")
+        
+        logger.info(f"✓ Sanity check results saved to {output_file}")
+        
+        del model
+        gc.collect()
+        torch.cuda.empty_cache()
+    
+    logger.info("\n" + "="*80)
+    logger.info("Sanity checks complete!")
+    logger.info("="*80)
+
+
 if __name__ == "__main__":
     # Parse command-line arguments
     parser = argparse.ArgumentParser(description="Run XAI analysis on trained models")
@@ -2502,6 +2672,9 @@ if __name__ == "__main__":
     parser.add_argument("--seed", default=None,
                        help="Specific seed to process (e.g., seed_51). "
                             "If not specified, processes all available seeds.")
+    parser.add_argument("--sanity-only", action="store_true",
+                       help="Run only sanity checks (layer randomization + input randomization) "
+                            "without full XAI analysis. Uses ResNet18 and ResNet101 by default.")
     args = parser.parse_args()
     
     # Discover all available seeds in checkpoints directory
@@ -2529,7 +2702,20 @@ if __name__ == "__main__":
     
     logger.info(f"Found {len(seed_dirs)} seed(s): {seed_dirs}")
     
-    # Run analysis for each seed
+    # Handle --sanity-only mode
+    if args.sanity_only:
+        logger.info("\n*** RUNNING SANITY CHECKS ONLY ***\n")
+        models_to_check = args.models if args.models else ["ResNet18", "ResNet101"]
+        for seed in seed_dirs:
+            try:
+                run_sanity_checks_only(seed, models_to_check)
+            except Exception as e:
+                logger.error(f"✗ Error running sanity checks for {seed}: {e}")
+                import traceback
+                traceback.print_exc()
+        sys.exit(0)
+    
+    # Run full analysis for each seed
     all_results = {}
     for seed in seed_dirs:
         logger.info(f"\n{'='*80}")
